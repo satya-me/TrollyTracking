@@ -110,28 +110,6 @@
                 beep.play();
             }
 
-            // async function showScanResult(qrCodeMessage) { // Make this function async
-            //     const respElement = $('#resp');
-
-            //     try {
-
-            //         let data = {
-            //             user_id: "{{ Auth::user()->id }}",
-            //             user_name: "{{ Auth::user()->name }}",
-            //             qr_data: qrCodeMessage,
-            //         };
-            //         const parsedData = JSON.stringify(data);
-            //         alert(parsedData);
-            //         // const resp = await store(parsedData);
-
-
-            //     } catch (error) {
-            //         alert(error.message);
-            //         Swal.fire("Invalid QR Code");
-            //         respElement.html('<div class="alert alert-danger">Invalid QR Code</div>');
-            //     }
-            // }
-
             async function showScanResult(qrCodeMessage) {
                 const respElement = $('#resp');
 
@@ -195,8 +173,12 @@
                         resolve(response);
                     },
                     error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                        Swal.fire('Error', 'An error occurred while storing the data.', 'error');
+                        if (xhr.status === 400) {
+                            Swal.fire('Error', xhr.responseJSON.error, 'error');
+                        } else {
+                            console.error('Error:', error);
+                            Swal.fire('Error', 'An error occurred while storing the data.', 'error');
+                        }
                         reject('An error occurred while storing the data.');
                     }
                 });

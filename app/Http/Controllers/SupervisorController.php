@@ -59,31 +59,43 @@ class SupervisorController extends Controller
             'department' => 'required|string'
         ]);
 
+        // Check if the supervisor has already scanned the trolly and exit_time is null
+        $existingRecord = ProductivityReport::where('trolly_name', $data['trolly_name'])
+        ->where('supervisor', $data['supervisor'])
+        ->where('trolly_name', $data['trolly_name'])
+        ->whereNull('exit_time')
+        ->first();
+
+        if ($existingRecord) {
+            // If the supervisor has already scanned the trolly and exit_time is null, return an error response
+            return response()->json(['error' => 'You have already scanned this trolly.'], 400);
+        }
+        else{
+            $newRecord = [
+                'trolly_name' => $data['trolly_name'],
+                'supervisor' => $data['supervisor'],
+                'department' => $data['department'],
+                'entry_time' => Carbon::now(),
+            ];
+
+            $latestReport = ProductivityReport::where('trolly_name', $newRecord['trolly_name'])->latest()->first();
+
+            if ($latestReport && !$latestReport->exit_time) {
+                $exitTime = Carbon::now();
+                $entryTime = new Carbon($latestReport->entry_time);
+                $totalTime = $entryTime->diff($exitTime)->format('%H:%I:%S');
+
+                $latestReport->update([
+                    'exit_time' => $exitTime,
+                    'total_time' => $totalTime,
+                ]);
+            }
 
 
-        $newRecord = [
-            'trolly_name' => $data['trolly_name'],
-            'supervisor' => $data['supervisor'],
-            'department' => $data['department'],
-            'entry_time' => Carbon::now(),
-        ];
+            ProductivityReport::create($newRecord);
 
-        $latestReport = ProductivityReport::where('trolly_name', $newRecord['trolly_name'])->latest()->first();
-
-        if ($latestReport && !$latestReport->exit_time) {
-            $exitTime = Carbon::now();
-            $entryTime = new Carbon($latestReport->entry_time);
-            $totalTime = $entryTime->diff($exitTime)->format('%H:%I:%S');
-
-            $latestReport->update([
-                'exit_time' => $exitTime,
-                'total_time' => $totalTime,
-            ]);
+            return response()->json(['message' => 'Data stored successfully'], 200);
         }
 
-
-        ProductivityReport::create($newRecord);
-
-        return response()->json(['message' => 'Data stored successfully']);
     }
 }

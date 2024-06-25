@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('q_r_temp_data', function (Blueprint $table) {
             $table->id();
+            $table->string('supervisor');
             $table->string('grade_name');
             $table->string('origin');
             $table->string('batch_no');

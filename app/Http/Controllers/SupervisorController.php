@@ -22,7 +22,6 @@ class SupervisorController extends Controller
 
     public function UpdateDispatchStatus(Request $request)
     {
-
         try {
             // Find the QRData model by ID
             $qrData = QRData::findOrFail($request->id);
@@ -32,7 +31,10 @@ class SupervisorController extends Controller
 
             // Update the model with the validated data if not already dispatched
             if (!$alreadyDispatched) {
-                $qrData->update(['dispatch_status' => 'Dispatched']);
+                $qrData->update([
+                    'dispatch_status' => 'Dispatched',
+                    'supervisor' => auth()->user()->id, // Set the supervisor to the authenticated user's ID
+                ]);
             }
 
             // Return the updated data as a JSON response
@@ -50,6 +52,7 @@ class SupervisorController extends Controller
             ]);
         }
     }
+
 
     public function UpdatetrollyStatus(Request $request)
     {

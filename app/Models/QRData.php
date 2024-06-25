@@ -10,6 +10,6 @@ class QRData extends Model
     use HasFactory;
 
     protected $fillable = [
-        'grade_name', 'origin', 'batch_no', 'net_weight', 'gross_weight', 'lot_no', 'dispatch_status'
+        'supervisor','grade_name', 'origin', 'batch_no', 'net_weight', 'gross_weight', 'lot_no', 'dispatch_status'
     ];
 }

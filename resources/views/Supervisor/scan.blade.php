@@ -189,6 +189,7 @@
             }
 
             return new Promise((resolve, reject) => {
+                params.supervisor_id = "{{Auth::user()->id}}";
                 $.ajax({
                     url: "{{ route('supervisor.dispatch-status') }}",
                     type: 'POST',
@@ -203,7 +204,7 @@
                         if (response.success) {
                             resolve(response);
                         } else {
-                            reject('Failed to toggle AC state.');
+                            reject(response);
                         }
                     },
                     error: function(xhr, status, error) {

@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/supervisor/dispatch/status', [SupervisorController::class, 'UpdateDispatchStatus'])->name('supervisor.dispatch-status');
+Route::post('/supervisor/dispatch/trolly', [SupervisorController::class, 'UpdatetrollyStatus'])->name('supervisor.trolly-status');

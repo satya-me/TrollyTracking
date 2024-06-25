@@ -179,7 +179,7 @@
 
             return new Promise((resolve, reject) => {
             $.ajax({
-                url: "{{ route('scan-qr') }}",
+                url: "{{ route('supervisor.trolly-status') }}",
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(params),

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 class ProductivityReport extends Model
 {
     use HasFactory;
@@ -12,4 +11,5 @@ class ProductivityReport extends Model
         'trolly_name', 'department', 'supervisor',
         'entry_time', 'exit_time', 'total_time',
     ];
+
 }

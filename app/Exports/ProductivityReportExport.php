@@ -1,7 +1,7 @@
 <?php
 namespace App\Exports;
 
-use App\Models\Productivity;
+use App\Models\ProductivityReport;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -13,13 +13,13 @@ class ProductivityReportExport implements FromQuery, WithHeadings, WithMapping
 
     public function __construct($fromDate, $toDate)
     {
-        $this->fromDate = $fromDate;  
+        $this->fromDate = $fromDate;
         $this->toDate = $toDate;
     }
 
     public function query()
     {
-        return Productivity::query()
+        return ProductivityReport::query()
             ->whereBetween('entry_time', [$this->fromDate, $this->toDate]);
     }
 

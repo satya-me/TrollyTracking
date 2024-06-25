@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Exports\ProductivityReportExport;
 use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\ProductivityReport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ProductivityReportExport;
 
 class AdminController extends Controller
 {
@@ -42,7 +43,8 @@ class AdminController extends Controller
 
     public function Productivity(Request $request)
     {
-        return view('Admin.productivity');
+        $data = ProductivityReport::get();
+        return view('Admin.productivity',compact('data'));
     }
 
 

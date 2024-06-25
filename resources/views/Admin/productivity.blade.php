@@ -62,6 +62,7 @@
                                 <table class="table app-table-hover mb-0 text-left">
                                     <thead>
                                         <tr>
+                                            <th class="cell">SL no.</th>
                                             <th class="cell">Trolly Name</th>
                                             <th class="cell">Department</th>
                                             <th class="cell">Supervisor</th>
@@ -72,32 +73,26 @@
 
                                         </tr>
                                     </thead>
+                                    <?php
+                                        $sl=1;
+                                    ?>
                                     <tbody>
-                                        <tr>
-                                            <td class="cell">N1</td>
-                                            <td class="cell"><span class="badge bg-success">RCN RECEVING</span></td>
-                                            <td class="cell">John Sanders</td>
-                                            <td class="cell"><span class="cell-data">16 Jun</span><span
-                                                    class="note">03:16 AM</span></td>
-                                            <td class="cell"><span class="cell-data">16 Jun</span><span
-                                                    class="note">04:30 AM</span></td>
-                                            <td class="cell"><span class="cell-data">16 Jun</span><span
-                                                    class="note">05:16 AM</span></td>
+                                        @foreach ($data as $item)
+                                            <?php
+                                                $supervisor = App\Models\User::where('id', $item->supervisor)->first();
+                                            ?>
 
-                                        </tr>
-                                        <tr>
-                                            <td class="cell">N1</td>
-                                            <td class="cell"><span class="badge bg-success">RCN RECEVING</span></td>
-                                            <td class="cell">John Sanders</td>
-                                            <td class="cell"><span class="cell-data">16 Jun</span><span
-                                                    class="note">03:16 AM</span></td>
-                                            <td class="cell"><span class="cell-data">16 Jun</span><span
-                                                    class="note">03:16 AM</span></td>
-                                            <td class="cell"><span class="cell-data">16 Jun</span><span
-                                                    class="note">03:16 AM</span></td>
+                                            <tr>
+                                                <td class="cell">{{$sl++}}</</td>
+                                                <td class="cell">{{ $item->trolly_name }}</td>
+                                                <td class="cell"><span class="badge bg-success">{{ $item->department}}</span></td>
+                                                <td class="cell">{{ $supervisor->name}}</td>
+                                                <td class="cell">{{ $item->entry_time}}</td>
+                                                <td class="cell">{{ $item->exit_time}}</td>
+                                                <td class="cell">{{ $item->total_time}}</td>
 
-                                        </tr>
-
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div><!--//table-responsive-->

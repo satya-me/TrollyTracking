@@ -169,15 +169,23 @@
                     },
                     success: function(response) {
                         console.log(response);
-                        Swal.fire('Success', 'Data stored successfully!', 'success');
+                        if (response.status == 400) {
+
+                            Swal.fire('Error', response.error, 'error');
+                        }else{
+                            Swal.fire('Success', response.message, 'success');
+                        }
+
+                        // Swal.fire('Success', 'Data stored successfully!', 'success');
                         resolve(response);
                     },
                     error: function(xhr, status, error) {
-                        if (xhr.status === 400) {
+                        if (xhr.status === 200) {
                             Swal.fire('Error', xhr.responseJSON.error, 'error');
                         } else {
                             console.error('Error:', error);
-                            Swal.fire('Error', 'An error occurred while storing the data.', 'error');
+                            Swal.fire('Error', 'An error occurred while storing the data.',
+                                'error');
                         }
                         reject('An error occurred while storing the data.');
                     }

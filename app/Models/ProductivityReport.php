@@ -9,6 +9,7 @@ class ProductivityReport extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'trollyName', 'department', 'supervisor',
+        'trolly_name', 'department', 'supervisor',
+        'entry_time', 'exit_time', 'total_time',
     ];
 }

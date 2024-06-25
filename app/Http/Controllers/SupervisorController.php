@@ -53,18 +53,22 @@ class SupervisorController extends Controller
 
     public function UpdatetrollyStatus(Request $request)
     {
-        $request->validate([
-            'qr_data' => 'required|string',
-            'user_id' => 'required|integer',
-            'user_name' => 'required|string'
+        $data = $request->validate([
+            'trolly_name' => 'required|string',
+            'supervisor' => 'required|string',
+            'department' => 'required|string'
         ]);
 
-        $qrData = json_decode($request->input('qr_data'), true);
-        $trollyName = $qrData['trolly_name']; // Adjust based on the structure of your QR data
-        $department = Auth::user()->department;
-        $supervisor = Auth::user()->name;
 
-        $latestReport = ProductivityReport::where('trolly_name', $trollyName)->latest()->first();
+
+        $newRecord = [
+            'trolly_name' => $data['trolly_name'],
+            'supervisor' => $data['supervisor'],
+            'department' => $data['department'],
+            'entry_time' => Carbon::now(),
+        ];
+
+        $latestReport = ProductivityReport::where('trolly_name', $newRecord['trolly_name'])->latest()->first();
 
         if ($latestReport && !$latestReport->exit_time) {
             $exitTime = Carbon::now();
@@ -77,12 +81,8 @@ class SupervisorController extends Controller
             ]);
         }
 
-        ProductivityReport::create([
-            'trolly_name' => $trollyName,
-            'department' => $department,
-            'supervisor' => $supervisor,
-            'entry_time' => Carbon::now(),
-        ]);
+
+        ProductivityReport::create($newRecord);
 
         return response()->json(['message' => 'Data stored successfully']);
     }

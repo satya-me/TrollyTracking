@@ -133,22 +133,24 @@
             // }
 
             async function showScanResult(qrCodeMessage) {
-            const respElement = $('#resp');
+                const respElement = $('#resp');
 
-            try {
-                let data = {
-                    user_id: "{{ Auth::user()->id }}",
-                    user_name: "{{ Auth::user()->name }}",
-                    qr_data: qrCodeMessage,
-                };
-                const parsedData = JSON.stringify(data);
-                await store(parsedData); // Send the data to the backend
-            } catch (error) {
-                alert(error.message);
-                Swal.fire("Invalid QR Code");
-                respElement.html('<div class="alert alert-danger">Invalid QR Code</div>');
+                try {
+                    let data = {
+                        supervisor: "{{ Auth::user()->id }}",
+                        // user_name: "{{ Auth::user()->name }}",
+                        department: "{{ Auth::user()->department }}",
+                        trolly_name: qrCodeMessage,
+                    };
+                    const parsedData = JSON.stringify(data);
+                    // alert(parsedData);
+                    await store(parsedData); // Send the data to the backend
+                } catch (error) {
+                    alert(error);
+                    Swal.fire("Invalid QR Code");
+                    respElement.html('<div class="alert alert-danger">Invalid QR Code</div>');
+                }
             }
-        }
 
             function initScanner() {
                 scanner = new Html5QrcodeScanner("my-qr-reader", {
@@ -168,6 +170,7 @@
         });
 
         async function store(params) {
+
             if (typeof params === 'string') {
                 try {
                     params = JSON.parse(params);
@@ -178,27 +181,27 @@
             }
 
             return new Promise((resolve, reject) => {
-            $.ajax({
-                url: "{{ route('supervisor.trolly-status') }}",
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(params),
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    Swal.fire('Success', 'Data stored successfully!', 'success');
-                    resolve(response);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    Swal.fire('Error', 'An error occurred while storing the data.', 'error');
-                    reject('An error occurred while storing the data.');
-                }
-            });
+                $.ajax({
+                    url: "{{ route('supervisor.trolly-status') }}",
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(params),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        Swal.fire('Success', 'Data stored successfully!', 'success');
+                        resolve(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        Swal.fire('Error', 'An error occurred while storing the data.', 'error');
+                        reject('An error occurred while storing the data.');
+                    }
+                });
             });
         }
-
     </script>
 </body>
 

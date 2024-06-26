@@ -3,47 +3,36 @@ namespace App\Exports;
 
 use App\Models\ProductivityReport;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class ProductivityReportExport implements FromQuery, WithHeadings, WithMapping
+class ProductivityReportExport implements FromCollection, WithHeadings
 {
-    protected $fromDate;
-    protected $toDate;
+    protected $data;
 
-    public function __construct($fromDate, $toDate)
+    public function __construct($data)
     {
-        $this->fromDate = $fromDate;
-        $this->toDate = $toDate;
+        $this->data = $data;
     }
 
-    public function query()
+    public function collection()
     {
-        return ProductivityReport::query()
-            ->whereBetween('entry_time', [$this->fromDate, $this->toDate]);
+        return $this->data;
     }
 
     public function headings(): array
     {
         return [
+            'ID',
             'Trolly Name',
             'Department',
             'Supervisor',
             'Entry Time',
             'Exit Time',
             'Total Time',
-        ];
-    }
-
-    public function map($productivity): array
-    {
-        return [
-            $productivity->trolly_name,
-            $productivity->department,
-            $productivity->supervisor,
-            $productivity->entry_time,
-            $productivity->exit_time,
-            $productivity->total_time,
+            'Created At',
+            'Updated At'
         ];
     }
 }

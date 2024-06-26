@@ -116,7 +116,7 @@ class QRController extends Controller
     {
         // Fetch QR code data from database
         $qrData = QRTempData::first();
-        $qr_latest = QRData::latest()->first();
+        $qr_latest = QRData::latest()->first()->makeHidden(['supervisor', 'created_at', 'updated_at']);
         if (!$qrData) {
             return response()->json(['error' => 'No QR data found'], 404);
         }
@@ -169,7 +169,7 @@ class QRController extends Controller
     {
         // Fetch QR code data from database
         $qrData = QRTempData::first();
-        $qr_latest = QRData::latest()->first();
+        $qr_latest = QRData::latest()->first()->makeHidden(['supervisor', 'created_at', 'updated_at']);
         if (!$qrData) {
             return response()->json(['error' => 'No QR data found'], 404);
         }

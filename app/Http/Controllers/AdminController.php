@@ -135,21 +135,33 @@ class AdminController extends Controller
     {
         if ($request->has('date_range') && $request->date_range != null) {
             $dateRange = $request->date_range;
-
             list($startDate, $endDate) = explode(' - ', $dateRange);
-
             $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
             $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
-
             $formattedFromDate = $fromDate->format('Y-m-d H:i:s');
             $formattedToDate = $toDate->format('Y-m-d H:i:s');
-
-            $qr_latest = ProductivityReport::whereBetween('created_at', [$formattedFromDate, $formattedToDate])
-                ->orderBy('id', 'desc')
-                ->get();
         } else {
-            $qr_latest = ProductivityReport::orderBy('created_at', 'desc')->get();
+            $formattedFromDate = null;
+            $formattedToDate = null;
         }
+
+        if ($request->has('department') && $request->department != 'ALL') {
+            $department = $request->department;
+        } else {
+            $department = null;
+        }
+
+        $query = ProductivityReport::query();
+
+        if ($formattedFromDate && $formattedToDate) {
+            $query->whereBetween('created_at', [$formattedFromDate, $formattedToDate]);
+        }
+
+        if ($department) {
+            $query->where('department', $department);
+        }
+
+        $qr_latest = $query->orderBy('created_at', 'desc')->get();
 
         // Generate Excel file
         // You can use Laravel Excel or any other library to generate the Excel file

@@ -79,28 +79,28 @@ class AdminController extends Controller
         return redirect()->route('admin.supervisor')->with('success', 'Supervisor removed successfully.');
     }
 
-    public function productivityReportDownload(Request $request)
-    {
-        if ($request->date_range != null)
-        {
-            $dateRange = $request->date_range;
-            list($startDate, $endDate) = explode(' - ', $dateRange);
+    // public function productivityReportDownload(Request $request)
+    // {
+    //     if ($request->date_range != null)
+    //     {
+    //         $dateRange = $request->date_range;
+    //         list($startDate, $endDate) = explode(' - ', $dateRange);
 
-            $_START = Carbon::createFromFormat('m/d/Y', $startDate)->toDateString();
-            $_END = Carbon::createFromFormat('m/d/Y', $endDate)->toDateString();
+    //         $_START = Carbon::createFromFormat('m/d/Y', $startDate)->toDateString();
+    //         $_END = Carbon::createFromFormat('m/d/Y', $endDate)->toDateString();
 
-            $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
-            $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
+    //         $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
+    //         $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
 
-            $fromDate = $fromDate->toDateTimeString();
-            $toDate = $toDate->toDateTimeString();
-        }
-        else {
-            return redirect()->back()->with('error', 'Please select a date range');
-        }
+    //         $fromDate = $fromDate->toDateTimeString();
+    //         $toDate = $toDate->toDateTimeString();
+    //     }
+    //     else {
+    //         return redirect()->back()->with('error', 'Please select a date range');
+    //     }
 
-        return Excel::download(new ProductivityReportExport($fromDate, $toDate), 'QR_Report_Export_' . $_START . '_to_' . $_END . '.xlsx');
-    }
+    //     return Excel::download(new ProductivityReportExport($fromDate, $toDate), 'QR_Report_Export_' . $_START . '_to_' . $_END . '.xlsx');
+    // }
 
     public function productivityReport(Request $request)
     {
@@ -131,5 +131,30 @@ class AdminController extends Controller
             return view('Supervisor.qr-report', compact('qr_latest'));
         }
     }
+    public function productivityReportDownload(Request $request)
+    {
+        if ($request->has('date_range') && $request->date_range != null) {
+            $dateRange = $request->date_range;
+
+            list($startDate, $endDate) = explode(' - ', $dateRange);
+
+            $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
+            $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
+
+            $formattedFromDate = $fromDate->format('Y-m-d H:i:s');
+            $formattedToDate = $toDate->format('Y-m-d H:i:s');
+
+            $qr_latest = ProductivityReport::whereBetween('created_at', [$formattedFromDate, $formattedToDate])
+                ->orderBy('id', 'desc')
+                ->get();
+        } else {
+            $qr_latest = ProductivityReport::orderBy('created_at', 'desc')->get();
+        }
+
+        // Generate Excel file
+        // You can use Laravel Excel or any other library to generate the Excel file
+        return Excel::download(new ProductivityReportExport($qr_latest), 'productivity_report.xlsx');
+    }
+
 
 }

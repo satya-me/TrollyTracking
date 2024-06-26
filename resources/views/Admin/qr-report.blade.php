@@ -80,6 +80,7 @@
                                                 <th class="cell">Net Weight</th>
                                                 <th class="cell">Gross Weight</th>
                                                 <th class="cell">Lot No</th>
+                                                <th class="cell">QR Image</th>
                                                 <th class="cell">Created Data</th>
                                             </tr>
                                         </thead>
@@ -95,6 +96,7 @@
                                                     <td class="cell">{{ $data->net_weight }}</td>
                                                     <td class="cell">{{ $data->gross_weight }}</td>
                                                     <td class="cell">{{ $data->lot_no }}</td>
+                                                    <td class="cell"><img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=$data->grade_name" width="70px", height="70px"></td>
                                                     <td class="cell">{{ $data->created_at }}</td>
                                                 </tr>
                                             @endforeach

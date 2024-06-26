@@ -43,7 +43,20 @@ class HomeController extends Controller
 
     public function adminHome(): View
     {
-        return view('Admin.dashboard');
+        $startDate = now()->startOfDay()->toDateTimeString();
+        $endDate = now()->endOfDay()->toDateTimeString();
+        $_USER = Auth::user();
+        $yesterday_trolly_scan = ProductivityReport::whereBetween('created_at', [now()->subDay()->startOfDay()->toDateTimeString(), now()->subDay()->endOfDay()->toDateTimeString()])
+        ->count();
+        $today_trolly_scan = ProductivityReport::whereBetween('created_at', [$startDate, $endDate])
+        ->count();
+        $yesterday_dispatch_scan = QRData::whereBetween('created_at', [now()->subDay()->startOfDay()->toDateTimeString(), now()->subDay()->endOfDay()->toDateTimeString()])
+        ->count();
+        $today_dispatch_scan = QRData::whereBetween('created_at', [$startDate, $endDate])
+        ->count();
+        $total_scan=$today_trolly_scan + $today_dispatch_scan+$yesterday_trolly_scan + $yesterday_dispatch_scan;
+        $yesterday_scan=$yesterday_trolly_scan + $yesterday_dispatch_scan;
+        return view('Admin.dashboard',compact('today_dispatch_scan','total_scan','today_trolly_scan'));
     }
 
     public function supervisorHome(): View

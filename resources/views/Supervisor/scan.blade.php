@@ -126,10 +126,18 @@
                         table.append(headerRow);
 
                         $.each(parsedData, function(key, value) {
-                            const row = $('<tr></tr>');
-                            row.append('<td class="data-cell">' + key + '</td>');
-                            row.append('<td class="data-cell">' + value + '</td>');
-                            table.append(row);
+                            // List of keys to exclude
+                            const excludeKeys = ['id', 'dispatch_status', 'origin',
+                                'net_weight', 'gross_weight'
+                            ];
+
+                            // Check if the current key is in the excludeKeys array
+                            if (!excludeKeys.includes(key)) {
+                                const row = $('<tr></tr>');
+                                row.append('<td class="data-cell">' + key + '</td>');
+                                row.append('<td class="data-cell">' + value + '</td>');
+                                table.append(row);
+                            }
                         });
 
                         respElement.empty().append(table);
@@ -189,7 +197,7 @@
             }
 
             return new Promise((resolve, reject) => {
-                params.supervisor_id = "{{Auth::user()->id}}";
+                params.supervisor_id = "{{ Auth::user()->id }}";
                 $.ajax({
                     url: "{{ route('supervisor.dispatch-status') }}",
                     type: 'POST',

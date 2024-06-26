@@ -56,8 +56,10 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::get('/user', [HomeController::class, 'index'])->name('user.home');
     Route::get('/user/home', [HomeController::class, 'index'])->name('user.home');
 
-    Route::get('/qr/form', [QRController::class, 'QRGen'])->name('user.qr');
-    Route::get('/qrcode/report', [QRController::class, 'QRCodeReport'])->name('user.qrcode-report');
+    Route::get('/user/qr/form', [QRController::class, 'QRGen'])->name('user.qr');
+    Route::post('/user/qr/temp', [QRController::class, 'QRTempData'])->name('user.qr.temp');
+    Route::get('/user/download-qrcode', [QRController::class, 'downloadQRCode'])->name('user.download-qrcode');
+    Route::get('/user/qrcode/report', [QRController::class, 'QRCodeReport'])->name('user.qrcode-report');
 });
 
 /*------------------------------------------

@@ -26,7 +26,7 @@
                                 </div><!--//col-->
                             </div><!--//row-->
                         </div><!--//app-card-header-->
-                        <form class="auth-form login-form is-readonly" action="{{ route('admin.qr.temp') }}" method="POST">
+                        <form class="auth-form login-form is-readonly" action="{{ route('user.qr.temp') }}" method="POST">
                             @csrf
                             <div class="app-card-body px-4">
                                 <div class="row">
@@ -133,7 +133,7 @@
                             </div>
                         </div><!--//app-card-body-->
                         <div class="app-card-footer p-4 mt-auto">
-                            <a class="btn app-btn-primary" href="{{ route('admin.download-qrcode') }}">Download QR</a>
+                            <a class="btn app-btn-primary" href="{{ route('user.download-qrcode') }}">Download QR</a>
                             <a class="btn app-btn-primary" href="#" onclick="openQRPage()">Sent To Print</a>
                         </div><!--//app-card-footer-->
                     </div><!--//app-card-->

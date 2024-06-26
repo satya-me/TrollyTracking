@@ -7,6 +7,7 @@ use App\Models\QRData;
 use Illuminate\View\View;
 use App\Models\QRTempData;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 class QRController extends Controller
@@ -26,6 +27,7 @@ class QRController extends Controller
         $LST_ID = $qr_latest->id ?? 0;
         $qrCode = $this->QRCodeImage($LST_ID);
         $qr_url = asset('qrcodes/qr_' . $LST_ID . '.png');
+        // return auth()->user();
         if (auth()->user()->type == "admin") {
             return view('Admin.qr', compact('qrCode', 'qr', 'qr_url'));
         }
@@ -55,20 +57,17 @@ class QRController extends Controller
             $qr_latest = QRData::whereBetween('created_at', [$formattedFromDate, $formattedToDate])
                 ->orderBy('id', 'desc')
                 ->paginate($_PAGINATE);
-        }
-        elseif (isset($_GET['status']) && $_GET['status'] != null && $_GET['status'] != 'Open this select menu') {
+        } elseif (isset($_GET['status']) && $_GET['status'] != null && $_GET['status'] != 'Open this select menu') {
             $qr_latest = QRData::where('dispatch_status', $_GET['status'])->orderBy('created_at', 'desc')->paginate($_PAGINATE);
-        }
-        elseif (isset($_GET['search_item']) && $_GET['search_item'] != null) {
+        } elseif (isset($_GET['search_item']) && $_GET['search_item'] != null) {
             $searchItem = $_GET['search_item'];
 
             $qr_latest = QRData::where('grade_name', 'LIKE', "%{$searchItem}%")
-                        ->orWhere('batch_no', 'LIKE', "%{$searchItem}%")
-                        ->orWhere('lot_no', 'LIKE', "%{$searchItem}%")
-                        ->orderBy('created_at', 'desc')
-                        ->paginate($_PAGINATE);
-        }
-        else {
+                ->orWhere('batch_no', 'LIKE', "%{$searchItem}%")
+                ->orWhere('lot_no', 'LIKE', "%{$searchItem}%")
+                ->orderBy('created_at', 'desc')
+                ->paginate($_PAGINATE);
+        } else {
             $qr_latest = QRData::orderBy('created_at', 'desc')->paginate($_PAGINATE);
             // return $qr_latest;
         }
@@ -100,8 +99,14 @@ class QRController extends Controller
             $message = 'Data inserted successfully.';
         }
 
+        if (Auth::user()->role == "Admin") {
+            # code...
+            return redirect()->route('admin.qr')->with('message', $message);
+        }
+        if (Auth::user()->role == "User") {
+            return redirect()->route('user.qr')->with('message', $message);
+        }
 
-        return redirect()->route('admin.qr')->with('message', $message);
 
         // return redirect()->back()->with('message', $message);
         // return response()->json(['message' => $message]);

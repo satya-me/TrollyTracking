@@ -100,7 +100,7 @@
                     <ul class="app-menu list-unstyled accordion" id="menu-accordion">
                         <li class="nav-item">
                             <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-                            <a class="nav-link " href="#">
+                            <a class="nav-link " href="{{route('user.qr')}}">
                                 <span class="nav-icon">
                                     <iconify-icon icon="mdi:qrcode-scan" width="30" height="30"
                                         style="color: #15a362"></iconify-icon>

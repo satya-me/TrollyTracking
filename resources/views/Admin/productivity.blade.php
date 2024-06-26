@@ -14,7 +14,7 @@
                             <h1 class="app-page-title mb">List Of Productivity</h1>
                             <div class="d-flex align-items-center justify-content-between gap-2">
                                 <div>
-                                    <input type="text" name="daterange" value="01/01/2024 - 01/15/2025" class="form-control" id="daterange" />
+                                    <input type="text" name="daterange" value="" class="form-control" id="daterange" />
                                 </div>
                                 <div>
                                     <select class="form-select" id="department" name="department">

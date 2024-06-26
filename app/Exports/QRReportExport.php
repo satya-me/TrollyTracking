@@ -47,7 +47,7 @@ class QRReportExport implements FromQuery, WithHeadings
             'Net Weight',
             'Gross Weight',
             'Lot No',
-            'Created Data',
+            'Created Date',
         ];
     }
 }

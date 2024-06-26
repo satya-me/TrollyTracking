@@ -44,7 +44,7 @@ class AdminController extends Controller
     public function Productivity(Request $request)
     {
         $data = ProductivityReport::get();
-        return view('Admin.productivity',compact('data'));
+        return view('Admin.productivity', compact('data'));
     }
 
     public function editSupervisor($id)
@@ -79,28 +79,6 @@ class AdminController extends Controller
         return redirect()->route('admin.supervisor')->with('success', 'Supervisor removed successfully.');
     }
 
-    // public function productivityReportDownload(Request $request)
-    // {
-    //     if ($request->date_range != null)
-    //     {
-    //         $dateRange = $request->date_range;
-    //         list($startDate, $endDate) = explode(' - ', $dateRange);
-
-    //         $_START = Carbon::createFromFormat('m/d/Y', $startDate)->toDateString();
-    //         $_END = Carbon::createFromFormat('m/d/Y', $endDate)->toDateString();
-
-    //         $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
-    //         $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
-
-    //         $fromDate = $fromDate->toDateTimeString();
-    //         $toDate = $toDate->toDateTimeString();
-    //     }
-    //     else {
-    //         return redirect()->back()->with('error', 'Please select a date range');
-    //     }
-
-    //     return Excel::download(new ProductivityReportExport($fromDate, $toDate), 'QR_Report_Export_' . $_START . '_to_' . $_END . '.xlsx');
-    // }
 
     public function productivityReport(Request $request)
     {
@@ -131,42 +109,81 @@ class AdminController extends Controller
             return view('Supervisor.qr-report', compact('qr_latest'));
         }
     }
+
     public function productivityReportDownload(Request $request)
     {
-        if ($request->has('date_range') && $request->date_range != null) {
-            $dateRange = $request->date_range;
+        // return $request;
+        $_DEPARTMENT = $request->department;
+        if ($request->date_range != null) {
+            $dateRange = $_GET['date_range'];
+
             list($startDate, $endDate) = explode(' - ', $dateRange);
+
+            $_START = Carbon::createFromFormat('m/d/Y', $startDate)->toDateString();
+            $_END = Carbon::createFromFormat('m/d/Y', $startDate)->toDateString();
+
             $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
             $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
-            $formattedFromDate = $fromDate->format('Y-m-d H:i:s');
-            $formattedToDate = $toDate->format('Y-m-d H:i:s');
+
+            $fromDate = $fromDate->toDateTimeString();
+            $toDate = $toDate->toDateTimeString();
         } else {
-            $formattedFromDate = null;
-            $formattedToDate = null;
+            return redirect()->back()->with('error', 'Please select a date range');
         }
 
-        if ($request->has('department') && $request->department != 'ALL') {
-            $department = $request->department;
-        } else {
-            $department = null;
-        }
+        return (new ProductivityReportExport($fromDate, $toDate, $_DEPARTMENT))
+            ->download('Productivity_Report ' . $_START . ' - ' . $_END . '.csv');
 
-        $query = ProductivityReport::query();
-
-        if ($formattedFromDate && $formattedToDate) {
-            $query->whereBetween('created_at', [$formattedFromDate, $formattedToDate]);
-        }
-
-        if ($department) {
-            $query->where('department', $department);
-        }
-
-        $qr_latest = $query->orderBy('created_at', 'desc')->get();
 
         // Generate Excel file
-        // You can use Laravel Excel or any other library to generate the Excel file
-        return Excel::download(new ProductivityReportExport($qr_latest), 'productivity_report.xlsx');
+        // return Excel::download(new ProductivityReportExport($qr_latest), 'productivity_report.xlsx');
     }
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// if ($request->has('date_range') && $request->date_range != null) {
+//     $dateRange = $request->date_range;
+//     list($startDate, $endDate) = explode(' - ', $dateRange);
+//     $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
+//     $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
+//     $formattedFromDate = $fromDate->format('Y-m-d H:i:s');
+//     $formattedToDate = $toDate->format('Y-m-d H:i:s');
+// } else {
+//     $formattedFromDate = null;
+//     $formattedToDate = null;
+// }
+
+// // Check if department is provided and not equal to 'ALL'
+// if ($request->has('department') && $request->department != 'ALL') {
+//     $department = $request->department;
+// } else {
+//     $department = null;
+// }
+
+// // Initialize the query
+// $query = ProductivityReport::query();
+
+// // Apply date range filter if provided
+// if ($formattedFromDate && $formattedToDate) {
+//     $query->whereBetween('created_at', [$formattedFromDate, $formattedToDate]);
+// }
+
+// // Apply department filter if provided
+// if ($department) {
+//     $query->where('department', $department);
+// }
+
+// // Get the filtered data
+// $qr_latest = $query->orderBy('created_at', 'desc')->get();

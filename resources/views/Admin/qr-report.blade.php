@@ -80,6 +80,7 @@
                                                 <th class="cell">Net Weight</th>
                                                 <th class="cell">Gross Weight</th>
                                                 <th class="cell">Lot No</th>
+                                                <th class="cell">QR CODE</th>
                                                 <th class="cell">Created Data</th>
                                             </tr>
                                         </thead>
@@ -95,6 +96,23 @@
                                                     <td class="cell">{{ $data->net_weight }}</td>
                                                     <td class="cell">{{ $data->gross_weight }}</td>
                                                     <td class="cell">{{ $data->lot_no }}</td>
+                                                    @php
+                                                        $_qr = [
+                                                            'id' => $data->id,
+                                                            'dispatch_status' => $data->dispatch_status,
+                                                            'grade_name' => $data->grade_name,
+                                                            'origin' => $data->origin,
+                                                            'batch_no' => $data->batch_no,
+                                                            'net_weight' => $data->net_weight,
+                                                            'gross_weight' => $data->gross_weight,
+                                                            'lot_no' => $data->lot_no,
+                                                        ];
+
+                                                        $QR_DATA = json_encode($data);
+                                                    @endphp
+                                                    <td class="cell"><img
+                                                            src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data={{ $QR_DATA }}"
+                                                            alt="" srcset="" width="50"></td>
                                                     <td class="cell">{{ $data->created_at }}</td>
                                                 </tr>
                                             @endforeach

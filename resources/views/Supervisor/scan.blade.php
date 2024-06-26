@@ -115,6 +115,7 @@
                 const respElement = $('#resp');
 
                 try {
+                    console.log(qrCodeMessage);
                     const parsedData = JSON.parse(qrCodeMessage);
 
                     if (typeof parsedData === 'object' && 'id' in parsedData && 'grade_name' in parsedData) {

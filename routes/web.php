@@ -85,7 +85,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     Route::get('/admin/productivity', [AdminController::class, 'Productivity'])->name('admin.productivity');
     Route::get('/admin/productivity/download', [AdminController::class, 'productivityReportDownload'])->name('download-productivity-report');
-
+    Route::get('/productivity/report', [AdminController::class, 'productivityReport'])->name('productivity-report');
 });
 
 Route::middleware(['auth', 'user-access:supervisor'])->group(function () {

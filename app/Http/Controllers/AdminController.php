@@ -47,7 +47,6 @@ class AdminController extends Controller
         return view('Admin.productivity',compact('data'));
     }
 
-
     public function editSupervisor($id)
     {
         $supervisor = User::find($id);
@@ -101,6 +100,36 @@ class AdminController extends Controller
         }
 
         return Excel::download(new ProductivityReportExport($fromDate, $toDate), 'QR_Report_Export_' . $_START . '_to_' . $_END . '.xlsx');
+    }
+
+    public function productivityReport(Request $request)
+    {
+        $_PAGINATE = 50;
+
+        if ($request->has('date_range') && $request->date_range != null) {
+            $dateRange = $request->date_range;
+
+            list($startDate, $endDate) = explode(' - ', $dateRange);
+
+            $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
+            $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
+
+            $formattedFromDate = $fromDate->format('Y-m-d H:i:s');
+            $formattedToDate = $toDate->format('Y-m-d H:i:s');
+
+            $qr_latest = ProductivityReport::whereBetween('created_at', [$formattedFromDate, $formattedToDate])
+                ->orderBy('id', 'desc')
+                ->paginate($_PAGINATE);
+        } else {
+            $qr_latest = ProductivityReport::orderBy('created_at', 'desc')->paginate($_PAGINATE);
+        }
+
+        if (auth()->user()->type == "admin") {
+            return view('Admin.qr-report', compact('qr_latest'));
+        }
+        if (auth()->user()->type == "user") {
+            return view('Supervisor.qr-report', compact('qr_latest'));
+        }
     }
 
 }

@@ -94,7 +94,7 @@
                                         <div class="card_title">
                                             <h5>Today's Scaned</h5>
                                         </div>
-                                        <p class="count">40</p>
+                                        <p class="count">{{ $today_dispatch_scan }}</p>
                                     </div>
                                     <div class="icon">
                                         <img src="{{ asset('assets/img/qr-code (1).png') }}" alt=""
@@ -108,7 +108,7 @@
                                         <div class="card_title">
                                             <h5>Yesterday's Scaned</h5>
                                         </div>
-                                        <p class="count">40</p>
+                                        <p class="count">{{ $yesterday_dispatch_scan }}</p>
                                     </div>
                                     <div class="icon">
                                         <img src="{{ asset('assets/img/qr-code (1).png') }}" alt=""

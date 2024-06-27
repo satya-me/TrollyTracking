@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
 @section('css')
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 @endsection
 
 @section('content')
@@ -80,36 +81,71 @@
                                                 <th class="cell">Net Weight</th>
                                                 <th class="cell">Gross Weight</th>
                                                 <th class="cell">Lot No</th>
-                                                <th class="cell">QR Image</th>
-                                                <th class="cell">Created Data</th>
+                                                <th class="cell">QR Code</th>
+                                                <th class="cell">Created Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($qr_latest as $data)
+                                                @php
+                                                    $QR_DATA = json_encode([
+                                                        'id' => $data->id,
+                                                        'dispatch_status' => $data->dispatch_status,
+                                                        'grade_name' => $data->grade_name,
+                                                        'origin' => $data->origin,
+                                                        'batch_no' => $data->batch_no,
+                                                        'net_weight' => $data->net_weight,
+                                                        'gross_weight' => $data->gross_weight,
+                                                        'lot_no' => $data->lot_no,
+                                                    ]);
+                                                @endphp
                                                 <tr>
-                                                    <td class="cell"><span
-                                                            class="badge {{ $data->dispatch_status == 'Production' ? 'bg-danger' : 'bg-success' }}">{{ $data->dispatch_status }}</span>
-                                                    </td>
+                                                    <td class="cell"><span class="badge {{ $data->dispatch_status == 'Production' ? 'bg-danger' : 'bg-success' }}">{{ $data->dispatch_status }}</span></td>
                                                     <td class="cell">{{ $data->grade_name }}</td>
                                                     <td class="cell">{{ $data->origin }}</td>
                                                     <td class="cell">{{ $data->batch_no }}</td>
                                                     <td class="cell">{{ $data->net_weight }}</td>
                                                     <td class="cell">{{ $data->gross_weight }}</td>
                                                     <td class="cell">{{ $data->lot_no }}</td>
-                                                    <td class="cell"><img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=$data->grade_name" width="70px", height="70px"></td>
+                                                    <td class="cell">
+                                                        <a href="#" class="view-qr" data-qr="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data={{ $QR_DATA }}">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                    </td>
                                                     <td class="cell">{{ $data->created_at }}</td>
                                                 </tr>
                                             @endforeach
-
                                         </tbody>
                                     </table>
                                     <!-- Add pagination links -->
-                                    <div class="pagination d-flex  mt-4">
+                                    <div class="pagination d-flex mt-4">
                                         {{ $qr_latest->links('pagination::bootstrap-5') }}
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Modal for viewing QR code -->
+                        <div class="modal fade" id="qrModal" tabindex="-1" role="dialog" aria-labelledby="qrModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="qrModalLabel">QR Code</h5>
+                                        {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> --}}
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            {{-- <span aria-hidden="true">&times;</span> --}}
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <img id="qrModalImage" src="" alt="QR Code" style="max-width: 100%; height: 250px;">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -138,4 +174,17 @@
             document.getElementById('dateInput').value = dateRangeValue;
         }
     </script>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+   <!-- JavaScript to handle the modal display -->
+   <script>
+       $(document).ready(function() {
+           $('.view-qr').click(function(event) {
+               event.preventDefault();
+               var qrSrc = $(this).data('qr');
+               $('#qrModalImage').attr('src', qrSrc);
+               $('#qrModal').modal('show');
+           });
+       });
+   </script>
 @endsection

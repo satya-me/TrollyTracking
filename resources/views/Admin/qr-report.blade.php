@@ -81,7 +81,7 @@
                                                 <th class="cell">Net Weight</th>
                                                 <th class="cell">Gross Weight</th>
                                                 <th class="cell">Lot No</th>
-                                                <th class="cell">QR Code</th>
+                                                <th class="cell">QR Image</th>
                                                 <th class="cell">Created Date</th>
                                             </tr>
                                         </thead>

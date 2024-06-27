@@ -138,52 +138,34 @@ class AdminController extends Controller
         // Generate Excel file
         // return Excel::download(new ProductivityReportExport($qr_latest), 'productivity_report.xlsx');
     }
+
+    // public function searchTrolly(Request $request)
+    // {
+    //     $search = $request->input('search');
+    //     $data = [];
+
+    //     if ($search) {
+    //         $data = ProductivityReport::where('trolly_name', 'LIKE', "%{$search}%")
+    //             ->orderBy('created_at', 'desc')
+    //             ->first();
+    //     }
+
+    //     return view('search_trolly', compact('data'));
+    // }
+
+    public function searchTrolly(Request $request)
+    {
+        $search = $request->input('search');
+        $data = null;
+
+        if ($search) {
+            $data = ProductivityReport::where('trolly_name', 'LIKE', "%{$search}%")
+                                      ->orderBy('created_at', 'desc')
+                                      ->first();
+        }
+
+        return view('search_trolly', compact('data'));
+
+    }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// if ($request->has('date_range') && $request->date_range != null) {
-//     $dateRange = $request->date_range;
-//     list($startDate, $endDate) = explode(' - ', $dateRange);
-//     $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
-//     $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
-//     $formattedFromDate = $fromDate->format('Y-m-d H:i:s');
-//     $formattedToDate = $toDate->format('Y-m-d H:i:s');
-// } else {
-//     $formattedFromDate = null;
-//     $formattedToDate = null;
-// }
-
-// // Check if department is provided and not equal to 'ALL'
-// if ($request->has('department') && $request->department != 'ALL') {
-//     $department = $request->department;
-// } else {
-//     $department = null;
-// }
-
-// // Initialize the query
-// $query = ProductivityReport::query();
-
-// // Apply date range filter if provided
-// if ($formattedFromDate && $formattedToDate) {
-//     $query->whereBetween('created_at', [$formattedFromDate, $formattedToDate]);
-// }
-
-// // Apply department filter if provided
-// if ($department) {
-//     $query->where('department', $department);
-// }
-
-// // Get the filtered data
-// $qr_latest = $query->orderBy('created_at', 'desc')->get();

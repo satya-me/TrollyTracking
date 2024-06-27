@@ -61,9 +61,30 @@
                         </div><!--//app-search-box--> --}}
 
                         <div class="app-search-box col">
-                            <form class="app-search-form" action="{{ route('search-trolly') }}" method="GET">
-                                <input type="text" placeholder="Find Trolly.. Like N1/W1" name="search" class="form-control search-input">
-                                <button type="submit" class="btn search-btn btn-primary" value="Search"><i class="fas fa-search"></i></button>
+                            <form action="{{ route('search-trolly') }}" method="GET">
+                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                    <div class="input-group">
+                                        <select class="form-select" id="department" name="department">
+                                            <option value="">Select Department</option>
+                                            <option value="RCN RECEIVING">RCN RECEIVING</option>
+                                            <option value="RCN GRADING">RCN GRADING</option>
+                                            <option value="RCN BOILING">RCN BOILING</option>
+                                            <option value="SCOOPING">SCOOPING</option>
+                                            <option value="BORMA/ DRYING">BORMA/ DRYING</option>
+                                            <option value="PEELING">PEELING</option>
+                                            <option value="SMALL TAIHO">SMALL TAIHO</option>
+                                            <option value="MAYUR">MAYUR</option>
+                                            <option value="HAMSA">HAMSA</option>
+                                            <option value="WHOLES GRADING">WHOLES GRADING</option>
+                                            <option value="LW GRADING">LW GRADING</option>
+                                            <option value="SHORTING">SHORTING</option>
+                                            <option value="DP & DS GRADING">DP & DS GRADING</option>
+                                            <option value="PACKING">PACKING</option>
+                                        </select>
+                                        <input type="text" class="form-control" name="search_trolly" placeholder="Find Trolly" aria-label="Find Trolly">
+                                        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
 

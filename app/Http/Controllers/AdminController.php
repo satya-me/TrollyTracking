@@ -79,7 +79,6 @@ class AdminController extends Controller
         return redirect()->route('admin.supervisor')->with('success', 'Supervisor removed successfully.');
     }
 
-
     public function productivityReport(Request $request)
     {
         $_PAGINATE = 50;
@@ -139,33 +138,53 @@ class AdminController extends Controller
         // return Excel::download(new ProductivityReportExport($qr_latest), 'productivity_report.xlsx');
     }
 
-    // public function searchTrolly(Request $request)
-    // {
-    //     $search = $request->input('search');
-    //     $data = [];
-
-    //     if ($search) {
-    //         $data = ProductivityReport::where('trolly_name', 'LIKE', "%{$search}%")
-    //             ->orderBy('created_at', 'desc')
-    //             ->first();
-    //     }
-
-    //     return view('search_trolly', compact('data'));
-    // }
-
     public function searchTrolly(Request $request)
     {
-        $search = $request->input('search');
+        $searchTrolly = $request->input('search_trolly');
+        $searchDepartment = $request->input('department');
         $data = null;
 
-        if ($search) {
-            $data = ProductivityReport::where('trolly_name', 'LIKE', "%{$search}%")
-                                      ->orderBy('created_at', 'desc')
-                                      ->first();
+        if ($searchTrolly || $searchDepartment) {
+            $query = ProductivityReport::query();
+
+            if ($searchTrolly) {
+                $query->where('trolly_name', 'LIKE', "%{$searchTrolly}%");
+            }
+
+            if ($searchDepartment && $searchDepartment !== '') {
+                // Get the latest entries for the selected department
+                $departmentQuery = ProductivityReport::where('department', $searchDepartment)
+                    ->orderBy('created_at', 'desc');
+
+                if (!$searchTrolly) {
+                    // If no specific trolly is searched, fetch all data for the department
+                    $data = $departmentQuery->get(); // Get all entries for the department
+                } else {
+                    // If searching with a specific trolly in the selected department
+                    $departmentQuery->where('trolly_name', $searchTrolly);
+                    $latestEntry = $departmentQuery->first();
+
+                    if ($latestEntry) {
+                        $data = collect([$latestEntry]); // Convert single entry to collection for consistent handling
+                    }
+                }
+            } else {
+                // If searching all departments or no specific department selected, get the latest overall entry
+                $data = $query->orderBy('created_at', 'desc')->first();
+                if ($data) {
+                    $data = collect([$data]); // Convert single entry to collection for consistent handling
+                }
+            }
+        } else {
+            // Clear data if no search criteria provided
+            $data = null;
         }
+        // return $data;
 
         return view('search_trolly', compact('data'));
-
     }
+
+
+
 }
 

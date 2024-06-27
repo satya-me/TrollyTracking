@@ -18,8 +18,7 @@
                                 </div>
                                 <div>
                                     <select class="form-select" id="department" name="department">
-                                        <option value="ALL">ALL</option>
-                                        <option value="RCN RECEVING">RCN RECEIVING</option>
+                                        <option value="RCN RECEVING">RCN RECEVING</option>
                                         <option value="RCN GRADING">RCN GRADING</option>
                                         <option value="RCN BOILING">RCN BOILING</option>
                                         <option value="SCOOPING">SCOOPING</option>

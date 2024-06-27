@@ -48,17 +48,46 @@
                                 </svg>
                             </a>
                         </div><!--//col-->
-                        <div class="search-mobile-trigger d-sm-none col">
+                        {{-- <div class="search-mobile-trigger d-sm-none col">
                             <i class="search-mobile-trigger-icon fas fa-search"></i>
-                        </div><!--//col-->
-                        <div class="app-search-box col">
+                        </div><!--//col--> --}}
+                        {{-- <div class="app-search-box col">
                             <form class="app-search-form">
                                 <input type="text" placeholder="Find Trolly.. Like N1/W1" name="search"
                                     class="form-control search-input">
                                 <button type="submit" class="btn search-btn btn-primary" value="Search"><i
                                         class="fas fa-search"></i></button>
                             </form>
-                        </div><!--//app-search-box-->
+                        </div><!--//app-search-box--> --}}
+
+                        <div class="app-search-box col">
+                            <form action="{{ route('search-trolly') }}" method="GET">
+                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                    <div class="input-group">
+                                        <select class="form-select" id="department" name="department">
+                                            <option value="">Select Department</option>
+                                            <option value="RCN RECEIVING">RCN RECEIVING</option>
+                                            <option value="RCN GRADING">RCN GRADING</option>
+                                            <option value="RCN BOILING">RCN BOILING</option>
+                                            <option value="SCOOPING">SCOOPING</option>
+                                            <option value="BORMA/ DRYING">BORMA/ DRYING</option>
+                                            <option value="PEELING">PEELING</option>
+                                            <option value="SMALL TAIHO">SMALL TAIHO</option>
+                                            <option value="MAYUR">MAYUR</option>
+                                            <option value="HAMSA">HAMSA</option>
+                                            <option value="WHOLES GRADING">WHOLES GRADING</option>
+                                            <option value="LW GRADING">LW GRADING</option>
+                                            <option value="SHORTING">SHORTING</option>
+                                            <option value="DP & DS GRADING">DP & DS GRADING</option>
+                                            <option value="PACKING">PACKING</option>
+                                        </select>
+                                        <input type="text" class="form-control" name="search_trolly" placeholder="Find Trolly" aria-label="Find Trolly">
+                                        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
 
                         <div class="app-utilities col-auto">
 
@@ -137,16 +166,14 @@
                             </a><!--//nav-link-->
                         </li><!--//nav-item-->
                         <li class="nav-item">
-                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-                            <a class="nav-link" href="">
+                            <a class="nav-link {{ \Route::currentRouteName() == 'search-trolly' ? 'active' : '' }}"
+                               href="{{ route('search-trolly') }}">
                                 <span class="nav-icon">
-                                    <iconify-icon icon="bi:card-list" width="30" height="30"
-                                        style="color: #15a362"></iconify-icon>
+                                    <iconify-icon icon="bi:card-list" width="30" height="30" style="color: #15a362"></iconify-icon>
                                 </span>
                                 <span class="nav-link-text" style="margin-left: 5px;">Find Trolly</span>
-                            </a><!--//nav-link-->
-                        </li><!--//nav-item-->
-
+                            </a>
+                        </li>
 
 
 

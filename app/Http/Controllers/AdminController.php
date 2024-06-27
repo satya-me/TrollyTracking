@@ -79,7 +79,6 @@ class AdminController extends Controller
         return redirect()->route('admin.supervisor')->with('success', 'Supervisor removed successfully.');
     }
 
-
     public function productivityReport(Request $request)
     {
         $_PAGINATE = 50;
@@ -138,52 +137,54 @@ class AdminController extends Controller
         // Generate Excel file
         // return Excel::download(new ProductivityReportExport($qr_latest), 'productivity_report.xlsx');
     }
+
+    public function searchTrolly(Request $request)
+    {
+        $searchTrolly = $request->input('search_trolly');
+        $searchDepartment = $request->input('department');
+        $data = null;
+
+        if ($searchTrolly || $searchDepartment) {
+            $query = ProductivityReport::query();
+
+            if ($searchTrolly) {
+                $query->where('trolly_name', 'LIKE', "%{$searchTrolly}%");
+            }
+
+            if ($searchDepartment && $searchDepartment !== '') {
+                // Get the latest entries for the selected department
+                $departmentQuery = ProductivityReport::where('department', $searchDepartment)
+                    ->orderBy('created_at', 'desc');
+
+                if (!$searchTrolly) {
+                    // If no specific trolly is searched, fetch all data for the department
+                    $data = $departmentQuery->get(); // Get all entries for the department
+                } else {
+                    // If searching with a specific trolly in the selected department
+                    $departmentQuery->where('trolly_name', $searchTrolly);
+                    $latestEntry = $departmentQuery->first();
+
+                    if ($latestEntry) {
+                        $data = collect([$latestEntry]); // Convert single entry to collection for consistent handling
+                    }
+                }
+            } else {
+                // If searching all departments or no specific department selected, get the latest overall entry
+                $data = $query->orderBy('created_at', 'desc')->first();
+                if ($data) {
+                    $data = collect([$data]); // Convert single entry to collection for consistent handling
+                }
+            }
+        } else {
+            // Clear data if no search criteria provided
+            $data = null;
+        }
+        // return $data;
+
+        return view('search_trolly', compact('data'));
+    }
+
+
+
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// if ($request->has('date_range') && $request->date_range != null) {
-//     $dateRange = $request->date_range;
-//     list($startDate, $endDate) = explode(' - ', $dateRange);
-//     $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
-//     $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
-//     $formattedFromDate = $fromDate->format('Y-m-d H:i:s');
-//     $formattedToDate = $toDate->format('Y-m-d H:i:s');
-// } else {
-//     $formattedFromDate = null;
-//     $formattedToDate = null;
-// }
-
-// // Check if department is provided and not equal to 'ALL'
-// if ($request->has('department') && $request->department != 'ALL') {
-//     $department = $request->department;
-// } else {
-//     $department = null;
-// }
-
-// // Initialize the query
-// $query = ProductivityReport::query();
-
-// // Apply date range filter if provided
-// if ($formattedFromDate && $formattedToDate) {
-//     $query->whereBetween('created_at', [$formattedFromDate, $formattedToDate]);
-// }
-
-// // Apply department filter if provided
-// if ($department) {
-//     $query->where('department', $department);
-// }
-
-// // Get the filtered data
-// $qr_latest = $query->orderBy('created_at', 'desc')->get();

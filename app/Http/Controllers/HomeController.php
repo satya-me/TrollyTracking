@@ -54,7 +54,9 @@ class HomeController extends Controller
         ->count();
         $today_dispatch_scan = QRData::whereBetween('created_at', [$startDate, $endDate])
         ->count();
-        $total_scan=$today_trolly_scan + $today_dispatch_scan+$yesterday_trolly_scan + $yesterday_dispatch_scan;
+        $scan_list= QRData::orderBy('created_at', 'desc')->count();
+        $scan_list_productivity= ProductivityReport::orderBy('created_at', 'desc')->count();
+        $total_scan=$scan_list + $scan_list_productivity;
         $yesterday_scan=$yesterday_trolly_scan + $yesterday_dispatch_scan;
         return view('Admin.dashboard',compact('today_dispatch_scan','total_scan','today_trolly_scan'));
     }

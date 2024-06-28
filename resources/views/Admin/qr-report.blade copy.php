@@ -110,7 +110,7 @@
                                                     <td class="cell">{{ $data->gross_weight }}</td>
                                                     <td class="cell">{{ $data->lot_no }}</td>
                                                     <td class="cell">
-                                                        <a href="#" class="view-qr" data-id="{{ $data->id }}"
+                                                        <a href="#" class="view-qr"
                                                             data-qr="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data={{ $QR_DATA }}">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
@@ -128,29 +128,36 @@
                             </div>
                         </div>
 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                        <!-- Modal for viewing QR code -->
+                        <div class="modal fade" id="qrModal" tabindex="-1" role="dialog" aria-labelledby="qrModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="qrModalLabel">QR Code</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <img id="qrModalImage" src="" alt="QR Code"
+                                            style="max-width: 100%; height: 250px;">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a id="downloadQR" class="btn btn-primary" href="#"
+                                            download="qrcode.png">Download</a>
+                                        <button id="printQR" type="button" class="btn btn-success">Print</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
 
-    <!-- Modal for viewing QR code -->
-    <!-- Modal -->
-    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="qrModalLabel">QR Code</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <img id="qrImage" src="" alt="QR Code" style="max-width: 100%; height: 250px;">
-                    <input type="hidden" id="qrDataId" value="">
-                </div>
-                <div class="modal-footer">
-                    <a id="downloadQR" class="btn btn-primary" href="#">Download</a>
-                    <button id="printQR" type="button" class="btn btn-success">Print</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <img id="qrModalImage" src="data:image/png;base64,..." style="display:none;" />
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -181,71 +188,54 @@
         }
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.view-qr').forEach(function(element) {
-                element.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const qrUrl = this.getAttribute('data-qr');
-                    const dataId = this.getAttribute('data-id');
-                    console.log({
-                        qrUrl,
-                        dataId
-                    });
-
-                    document.getElementById('qrImage').src = qrUrl;
-                    document.getElementById('qrDataId').value = dataId;
-
-                    // Update the download button link
-                    const downloadLink = document.getElementById('downloadQR');
-                    downloadLink.href = `/admin/get-qr-image/${dataId}`;
-
-                    const qrModal = new bootstrap.Modal(document.getElementById('qrModal'));
-                    qrModal.show();
+        $(document).ready(function() {
+            $('.view-qr').click(function(event) {
+                event.preventDefault();
+                var qrSrc = $(this).data('qr');
+                console.log({
+                    qrSrc
                 });
+                $('#qrModalImage').attr('src', qrSrc);
+                $('#qrModal').modal('show');
             });
-            document.getElementById('printQR').addEventListener('click', function() {
-                // function openQRPage() {
-                const qrUrl = document.getElementById('qrImage').src;
+        });
+    </script>
 
-                const newWindow = window.open('', '_blank');
-                newWindow.document.write(`
-                                <!DOCTYPE html>
-                                <html lang="en">
-                                <head>
-                                    <meta charset="UTF-8">
-                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                    <title>QR Code Display</title>
-                                    <style>
-                                        @media print {
-                                            body * {
-                                                visibility: hidden;
-                                            }
-                                            #qr-code, #qr-code * {
-                                                visibility: visible;
-                                            }
-                                            #qr-code {
-                                                position: absolute;
-                                                left: 0;
-                                                top: 0;
-                                                width: 100%;
-                                                height: 100%;
-                                                display: flex;
-                                                justify-content: center;
-                                                align-items: center;
-                                            }
-                                        }
-                                    </style>
-                                </head>
-                                <body onload="window.print()">
-                                    <h1>QR Code</h1>
-                                    <img id="qr-code" src="${qrUrl}" alt="QR Code">
+    <script>
+        $(document).ready(function() {
+            // Function to handle downloading the QR code image
+            $('#downloadQR').click(function() {
+                // Get the src attribute of the QR code image
+                var qrImageUrl = $('#qrModalImage').attr('src');
 
-                                </body>
+                console.log(qrImageUrl);
+                return;
+                // Create an anchor element to trigger download
+                // var downloadLink = document.createElement('a');
+                // downloadLink.href = qrImageUrl;
+                // downloadLink.download =
+                //     'qr_code.png'; // File name to download as (you can change the extension based on the image type)
+                // document.body.appendChild(downloadLink);
+                // downloadLink.click();
+                // document.body.removeChild(downloadLink);
+            });
 
-                                </html>
-                                `);
-                newWindow.document.close();
-                // }
+            // Function to handle printing the QR code image
+            $('#printQR').click(function() {
+                // Get the QR code image element
+                var qrImage = document.getElementById('qrModalImage');
+
+                // Create a new window to print the QR code
+                var printWindow = window.open('', '_blank');
+                printWindow.document.open();
+                printWindow.document.write(
+                    '<html><head><title>Print QR Code</title></head><body style="text-align:center;">');
+                printWindow.document.write('<img src="' + qrImage.src +
+                    '" style="max-width:100%; height:auto;">');
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+                printWindow.print();
+                printWindow.close();
             });
         });
     </script>

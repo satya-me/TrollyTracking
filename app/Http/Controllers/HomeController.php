@@ -60,8 +60,9 @@ class HomeController extends Controller
         $yesterday_scan=$yesterday_trolly_scan + $yesterday_dispatch_scan;
 
         //floor plan
-        $reports = ProductivityReport::all();
+        $reports = ProductivityReport::whereNull('exit_time')->whereNull('total_time')->get();
         $departments = $reports->groupBy('department');
+
 
         return view('Admin.dashboard',compact('today_dispatch_scan','total_scan','today_trolly_scan','departments'));
     }

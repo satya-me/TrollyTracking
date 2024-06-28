@@ -64,94 +64,153 @@
         </div><!--//row-->
         <div class="container-xl">
 
-
-
+            <!-- floor_plan.blade.php -->
             <div class="floor-plan">
-
                 <div class="box">
                     <div class="content">
-
                         <div class="name">RCN RECEVING</div>
+                    </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['RCN RECEVING'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">RCN GRADING</div>
                     </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['RCN GRADING'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
+                    </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">RCN BOILING</div>
                     </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['RCN BOILING'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
+                    </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">SCOOPING</div>
-
+                    </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['SCOOPING'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">BORMA/ DRYING</div>
-
+                    </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['BORMA/ DRYING'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">PEELING</div>
-
+                    </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['PEELING'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">SMALL TAIHO</div>
-
+                    </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['SMALL TAIHO'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">MAYUR</div>
-
+                    </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['MAYUR'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">HAMSA</div>
                     </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['HAMSA'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
+                    </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">WHOLES GRADING</div>
-
+                    </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['WHOLES GRADING'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">LW GRADING</div>
                     </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['LW GRADING'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
+                    </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">SHORTING</div>
-
+                    </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['SHORTING'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">DP & DS GRADING</div>
                     </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['DP & DS GRADING'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
+                    </div>
                 </div>
                 <div class="box">
                     <div class="content">
                         <div class="name">PACKING</div>
                     </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['PACKING'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
+                    </div>
                 </div>
-
-            </div><!--//container-fluid-->
+            </div>
         </div><!--//app-content-->
-
 
     </div><!--//app-wrapper-->
 @endsection
 @section('js')
+
 @endsection

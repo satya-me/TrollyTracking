@@ -58,7 +58,12 @@ class HomeController extends Controller
         $scan_list_productivity= ProductivityReport::orderBy('created_at', 'desc')->count();
         $total_scan=$scan_list + $scan_list_productivity;
         $yesterday_scan=$yesterday_trolly_scan + $yesterday_dispatch_scan;
-        return view('Admin.dashboard',compact('today_dispatch_scan','total_scan','today_trolly_scan'));
+
+        //floor plan
+        $reports = ProductivityReport::all();
+        $departments = $reports->groupBy('department');
+
+        return view('Admin.dashboard',compact('today_dispatch_scan','total_scan','today_trolly_scan','departments'));
     }
 
     public function supervisorHome(): View

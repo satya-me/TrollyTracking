@@ -216,17 +216,17 @@ class QRController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         } finally {
             // Close cURL session and file handle
-            curl_close($ch_wn);
-            fclose($fp_dwn);
+            curl_close($ch);
+            fclose($fp);
         }
 
         // Check if QR code image was generated successfully
-        if (!file_exists($download_qr)) {
+        if (!file_exists($qrCodePath)) {
             return response()->json(['error' => 'QR code image not generated'], 500);
         }
 
         // Download the QR code file
-        return response()->download($download_qr)->deleteFileAfterSend(true);
+        return response()->download($qrCodePath)->deleteFileAfterSend(true);
     }
 
 

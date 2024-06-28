@@ -11396,7 +11396,7 @@ fieldset:disabled .btn {
     }
 }
 
-/*!  
+/*!
  * Portal - Bootstrap 5 Admin Dashboard Template for Developers
  * Version: 2.1
  * Author: Xiaoying Riley
@@ -11947,7 +11947,7 @@ button.close:focus {
 
 .app-branding .logo-icon {
     width: 150px;
-   
+
 }
 
 
@@ -12827,7 +12827,7 @@ button.close:focus {
     height: 150px; */
     border-radius: 10px;
     object-fit: cover;
-    
+
 }
 
 .QR_img img{
@@ -12888,7 +12888,7 @@ button.close:focus {
   width: 15px;
   height: 15px;
   border-radius: 10px;
- 
+
   margin-bottom: 10px;
 }
 
@@ -12918,79 +12918,80 @@ button.close:focus {
 
 .floor-plan .box {
     color: #929796;
- 
     background: #dbdbdb;
-    padding: 30px 20px;
+    padding: 4px 20px;
+    padding-bottom: 50px;
     display: grid;
     font-size: 20px;
-    place-items: center;
-    text-align: center;
+    /* place-items: center;
+    text-align: center; */
     color: #fff;
     transition: 0.5s;
      position: relative;
     overflow: hidden;
     border: 1px solid #706e6e;
+   text-align: center;
   }
 
   .name {
-    color: #fa4f3b;
-    font-size: 15px;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.box:hover .name {
+    color: #fff;
+    font-size: 14px;
     opacity: 1;
+    transition: opacity 0.3s;
+    text-align: center;
+    background: #fa4f3b;
+    padding: 1px 3px;
+    display: inline-block;
+    border-radius: 5px;
+    margin-bottom: 15px;
+
 }
-  
 
-  
 
-  
-  .floor-plan .box:nth-child(1) {
+.floor-plan .box:nth-child(1) {
     grid-column: span 2;
     grid-row: span 1;
-  }
-  
-  .floor-plan .box:nth-child(2) {
+}
+
+.floor-plan .box:nth-child(2) {
     grid-column: span 1;
     grid-row: span 2;
-  }
-  
-  .floor-plan .box:nth-child(4) {
+}
+
+.floor-plan .box:nth-child(4) {
     grid-column: span 1;
     grid-row: span 2;
-  }
-  
-  .floor-plan .box:nth-child(5) {
+}
+
+.floor-plan .box:nth-child(5) {
     grid-column: span 1;
     grid-row: span 1;
-  }
+}
 
-    
-  .floor-plan .box:nth-child(7) {
+
+.floor-plan .box:nth-child(7) {
     grid-column: span 1;
     grid-row: span 2;
-  }
-  .floor-plan .box:nth-child(8) {
+}
+.floor-plan .box:nth-child(8) {
     grid-column: span 2;
     grid-row: span 2;
-  }
-  .floor-plan .box:nth-child(10) {
+}
+.floor-plan .box:nth-child(10) {
     grid-column: span 2;
     grid-row: span 2;
-  }
-  .floor-plan .box:nth-child(12) {
+}
+.floor-plan .box:nth-child(12) {
     grid-column: span 2;
     grid-row: span 2;
-  }
+}
 
-  .floor-plan .box:nth-child(14) {
+.floor-plan .box:nth-child(14) {
     grid-column: span 2;
     grid-row: span 1;
-  }
-  
-  @media (max-width: 991px) {
+}
+
+@media (max-width: 991px) {
     .floor-plan {
       grid-template-columns: repeat(auto-fill, minmax(50%, 1fr));
       grid-template-rows: minmax(auto, auto);
@@ -12999,4 +13000,16 @@ button.close:focus {
       grid-column: unset !important;
       grid-row: unset !important;
     }
-  }
+}
+
+.trolly_showing{
+    text-align: left;
+}
+
+.trolly_box{
+    display: inline-block;
+    background: #0d623b;
+    border-radius: 4px;
+    font-size: 12px;
+    padding: 5px;
+}

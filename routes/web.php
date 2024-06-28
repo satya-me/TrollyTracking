@@ -60,6 +60,8 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::post('/user/qr/temp', [QRController::class, 'QRTempData'])->name('user.qr.temp');
     Route::get('/user/download-qrcode', [QRController::class, 'downloadQRCode'])->name('user.download-qrcode');
     Route::get('/user/qrcode/report', [QRController::class, 'QRCodeReport'])->name('user.qrcode-report');
+    Route::get('/download-qr-code', [QRController::class, 'downloadQRCodeView'])->name('download.qr.code');
+
 });
 
 /*------------------------------------------

@@ -6,7 +6,9 @@ use Carbon\Carbon;
 use App\Models\QRData;
 use Illuminate\View\View;
 use App\Models\QRTempData;
+use App\Exports\QRDataExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
@@ -269,4 +271,12 @@ class QRController extends Controller
         // Download the QR code file
         // return response()->download($qrCodePath)->deleteFileAfterSend(true);
     }
+    public function downloadExcel(Request $request)
+    {
+        $gradeName = $request->input('grade_name');
+        $dispatchStatus = 'In Stock';
+
+        return Excel::download(new QRDataExport($gradeName, $dispatchStatus), 'qr_data.xlsx');
+    }
+
 }

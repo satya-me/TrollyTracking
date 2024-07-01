@@ -11,8 +11,6 @@
                 <div class="col-12 col-lg-12">
                     <div class="app-card app-card-basic shadow-sm">
                         <div class="row m-2">
-
-
                             <div class="col-3 col-lg-3">
                                 <div class="mb-3 ">
                                     <form id="statusForm" class="p-2" action="{{ route('admin.qrcode-report') }}"
@@ -64,6 +62,37 @@
                                         </div>
                                     </div>
 
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="row m-2">
+                            {{-- <div class="col-3 col-lg-3">
+                                <div class="mb-3 ">
+                                    <form id="statusForm" class="p-2" action="#"
+                                        method="GET">
+                                        <select class="form-select " name="status" id="statusSelect"
+                                            aria-label="Default select example">
+                                            <option selected>Open this select menu</option>
+                                            <option value="Production">Production</option>
+                                            <option value="Dispatched">Dispatched</option>
+                                        </select>
+                                    </form>
+                                </div>
+                            </div> --}}
+
+                            <div class="col-3 col-lg-2">
+                                <form action="{{ route('qr.downloadExcel') }}" method="GET" class="mt-2">
+                                    <input name="grade_name" id="gradeNameInput" type="text" placeholder="Enter grade name" required>
+                                    <button type="submit" class="generate_btn">
+                                        <span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="#fff">
+                                                <path d="m12 16 4-5h-3V4h-2v7H8z" />
+                                                <path d="M20 18H4v-7H2v7c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-7h-2v7z" />
+                                            </svg>
+                                        </span>
+                                        Download
+                                    </button>
                                 </form>
                             </div>
                         </div>

@@ -79,6 +79,10 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/admin/qrcode/report', [QRController::class, 'QRCodeReport'])->name('admin.qrcode-report');
     Route::get('/admin/qrcode/download', [ReportController::class, 'QRCodeReportDownload'])->name('download-qr-report');
 
+
+    Route::get('/download-excel', [QRController::class, 'downloadExcel'])->name('qr.downloadExcel');
+
+
     Route::get('/admin/supervisor', [AdminController::class, 'SupervisorView'])->name('admin.supervisor');
     Route::post('/admin/add/supervisor', [AdminController::class, 'AddSupervisor'])->name('admin.add-supervisor');
     //edit section

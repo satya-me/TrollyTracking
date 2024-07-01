@@ -156,7 +156,6 @@ class QRController extends Controller
             // Close cURL session and file handle
             curl_close($ch);
             fclose($fp);
-
         }
 
         // Check if QR code image was generated successfully
@@ -170,54 +169,68 @@ class QRController extends Controller
 
     public function downloadQRCodeView(Request $request)
     {
-        // Fetch QR code data from the request
-        $qrData = $request->query('data');
-        if (!$qrData) {
-            return response()->json(['error' => 'No QR data provided'], 404);
+        // Retrieve QR data
+        $qr_latest = QRData::where('id', $request->id)->first();
+
+        // Check if QR data is found
+        if (!$qr_latest) {
+            return response()->json(['error' => 'No QR data found'], 404);
         }
+
+        // Hide specified attributes
+        $qr_latest->makeHidden(['supervisor', 'created_at', 'updated_at']);
 
         // Generate QR code image URL
-        $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" . urlencode($qrData);
-        $qrCodePath = public_path('qrcodes/qr_' . uniqid() . '.png');
+        $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" . urlencode($qr_latest);
 
         // Ensure the directory exists
-        if (!is_dir(public_path('qrcodes'))) {
-            mkdir(public_path('qrcodes'), 0755, true);
+        $qrDirectory = public_path('qrcodes');
+        if (!is_dir($qrDirectory)) {
+            mkdir($qrDirectory, 0755, true);
         }
 
+        // Path to save the downloaded QR code image
+        $download_qr = $qrDirectory . '/qr_' . $qr_latest->id . '.png';
+
         // Initialize cURL session
-        $ch = curl_init($qrCodeUrl);
-        $fp = fopen($qrCodePath, 'wb');
-        if (!$ch || !$fp) {
-            if ($fp) fclose($fp);
-            if ($ch) curl_close($ch);
-            return response()->json(['error' => 'Error initializing cURL or file handle'], 500);
+        $ch_wn = curl_init($qrCodeUrl);
+
+        // Open file for writing
+        $fp_dwn = fopen($download_qr, 'wb');
+
+        if ($ch_wn === false || $fp_dwn === false) {
+            return response()->json(['error' => 'Failed to initialize cURL or open file'], 500);
         }
 
         try {
             // Set cURL options
-            curl_setopt($ch, CURLOPT_FILE, $fp);
-            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch_wn, CURLOPT_FILE, $fp_dwn);
+            curl_setopt($ch_wn, CURLOPT_HEADER, 0);
 
-            if (!curl_exec($ch)) {
-                throw new \Exception('cURL error: ' . curl_error($ch));
+            // Execute cURL session
+            curl_exec($ch_wn);
+
+            // Check for cURL errors
+            if (curl_errno($ch_wn)) {
+                return response()->json(['error' => 'cURL error: ' . curl_error($ch_wn)], 500);
             }
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         } finally {
             // Close cURL session and file handle
-            curl_close($ch);
-            fclose($fp);
+            curl_close($ch_wn);
+            fclose($fp_dwn);
         }
 
         // Check if QR code image was generated successfully
-        if (!file_exists($qrCodePath)) {
+        if (!file_exists($download_qr)) {
             return response()->json(['error' => 'QR code image not generated'], 500);
         }
 
         // Download the QR code file
-        return response()->download($qrCodePath)->deleteFileAfterSend(true);
+        return response()->download($download_qr)->deleteFileAfterSend(true);
     }
+
 
     public function QRCodeImage($id)
     {

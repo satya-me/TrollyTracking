@@ -97,6 +97,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     Route::get('/search-trolly', [AdminController::class, 'searchTrolly'])->name('search-trolly');
 
+
+    Route::get('/admin/get-qr-image/{id?}', [QRController::class, 'downloadQRCodeView'])->name('get-qr-image');
 });
 
 Route::middleware(['auth', 'user-access:supervisor'])->group(function () {

@@ -148,15 +148,32 @@
         });
 
         async function store(params) {
+            // let params;
 
-            if (typeof params === 'string') {
-                try {
-                    params = JSON.parse(params);
-                } catch (e) {
-                    console.error('Invalid JSON string:', e);
-                    return;
+            try {
+                params = JSON.parse(params);
+
+                if (typeof params === 'object' && 'trolly_name' in params) {
+                    const trollyName = params.trolly_name;
+                    const validPattern =
+                        /^(N|W|C)([1-9]|[1-9][0-9]|100)$/; // Regular expression for N1-N100, W1-W100, or C1-C100
+
+                    if (validPattern.test(trollyName)) {
+                        console.log('Valid trolly_name:', trollyName);
+                        // Swal.fire('Error', response.error, 'error');
+                    } else {
+                        console.error('Invalid trolly_name:', trollyName);
+                        Swal.fire('Error', 'Invalid trolly name', 'error');
+                        return;
+                    }
                 }
+            } catch (e) {
+                console.error('Invalid JSON string:', e);
+                Swal.fire('Error', 'Invalid JSON string:', 'error');
+                return;
             }
+
+            // return;
 
             return new Promise((resolve, reject) => {
                 $.ajax({
@@ -172,7 +189,7 @@
                         if (response.status == 400) {
 
                             Swal.fire('Error', response.error, 'error');
-                        }else{
+                        } else {
                             Swal.fire('Success', response.message, 'success');
                         }
 

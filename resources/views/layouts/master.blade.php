@@ -81,8 +81,10 @@
                                             <option value="DP & DS GRADING">DP & DS GRADING</option>
                                             <option value="PACKING">PACKING</option>
                                         </select>
-                                        <input type="text" class="form-control" name="search_trolly" placeholder="Find Trolly" aria-label="Find Trolly">
-                                        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                                        <input type="text" class="form-control" name="search_trolly"
+                                            placeholder="Find Trolly" aria-label="Find Trolly">
+                                        <button class="btn btn-primary" type="submit"><i
+                                                class="fas fa-search"></i></button>
                                     </div>
                                 </div>
                             </form>
@@ -92,40 +94,21 @@
                         <div class="app-utilities col-auto">
 
                             <div class="app-utility-item">
-                                <a href="#" title="Settings">
+                                <a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();"
+                                    title="Logout">
 
-                                    <iconify-icon icon="akar-icons:gear" width="30" height="30"
-                                        style="color: #15a362; "></iconify-icon>
+                                    <iconify-icon icon="ri:logout-circle-line" width="38" height="38"
+                                        style="color: #ac0909; "></iconify-icon>
                                 </a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
                             </div>
 
-                            <div class="app-utility-item app-user-dropdown dropdown">
-                                <iconify-icon icon="ph:user" width="30" height="30" style="color: #15a362; "
-                                    class="" id="user-dropdown-toggle" data-bs-toggle="dropdown" role="button"
-                                    aria-expanded="false"></iconify-icon>
-                                {{-- <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown"
-                                    href="#" role="button" aria-expanded="false"><img
-                                        src="{{ asset('assets/images/user.png') }}" alt="user profile"></a> --}}
-                                <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
-                                    <li><a class="dropdown-item" href="#">{{ Auth::user()->name }}</a></li>
-                                    <li><a class="dropdown-item" href="#">Settings</a></li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            {{ __('Logout') }}
-                                        </a>
 
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                            class="d-none">
-                                            @csrf
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -167,9 +150,10 @@
                         </li><!--//nav-item-->
                         <li class="nav-item">
                             <a class="nav-link {{ \Route::currentRouteName() == 'search-trolly' ? 'active' : '' }}"
-                               href="{{ route('search-trolly') }}">
+                                href="{{ route('search-trolly') }}">
                                 <span class="nav-icon">
-                                    <iconify-icon icon="bi:card-list" width="30" height="30" style="color: #15a362"></iconify-icon>
+                                    <iconify-icon icon="bi:card-list" width="30" height="30"
+                                        style="color: #15a362"></iconify-icon>
                                 </span>
                                 <span class="nav-link-text" style="margin-left: 5px;">Find Trolly</span>
                             </a>

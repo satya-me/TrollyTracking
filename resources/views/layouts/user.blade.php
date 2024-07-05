@@ -46,13 +46,13 @@
 
                         <div class="app-utilities col-auto">
 
-                            <div class="app-utility-item">
+                            {{-- <div class="app-utility-item">
                                 <a href="#" title="Settings">
 
                                     <iconify-icon icon="akar-icons:gear" width="30" height="30"
                                         style="color: #15a362; "></iconify-icon>
                                 </a>
-                            </div>
+                            </div> --}}
 
                             <div class="app-utility-item app-user-dropdown dropdown">
                                 <iconify-icon icon="ph:user" width="30" height="30" style="color: #15a362; "
@@ -63,7 +63,7 @@
                                         src="{{ asset('assets/images/user.png') }}" alt="user profile"></a> --}}
                                 <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
                                     <li><a class="dropdown-item" href="#">{{ Auth::user()->name }}</a></li>
-                                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                                    {{-- <li><a class="dropdown-item" href="#">Settings</a></li> --}}
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
@@ -109,16 +109,16 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                        {{-- <li class="nav-item">
+
                             <a class="nav-link " href="#">
                                 <span class="nav-icon">
                                     <iconify-icon icon="oui:app-reporting" width="30" height="30"
                                         style="color: #15a362"></iconify-icon>
                                 </span>
                                 <span class="nav-link-text" style="margin-left: 5px;">QR CODE Report</span>
-                            </a><!--//nav-link-->
-                        </li>
+                            </a>
+                        </li> --}}
 
                     </ul><!--//app-menu-->
                 </nav>

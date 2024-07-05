@@ -196,6 +196,18 @@
                             </a><!--//nav-link-->
                         </li>
 
+                        <li class="nav-item">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link {{ \Route::currentRouteName() == 'admin.setting' ? 'active' : '' }}"
+                                href="{{ route('admin.setting') }}">
+                                <span class="nav-icon">
+                                    <iconify-icon icon="oui:app-reporting" width="30" height="30"
+                                        style="color: #15a362"></iconify-icon>
+                                </span>
+                                <span class="nav-link-text" style="margin-left: 5px;">Setting</span>
+                            </a><!--//nav-link-->
+                        </li>
+
                     </ul><!--//app-menu-->
                 </nav>
 

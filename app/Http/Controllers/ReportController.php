@@ -9,9 +9,21 @@ use App\Exports\QRReportExport;
 
 class ReportController extends Controller
 {
-    //
     public function QRCodeReportDownload(Request $request)
     {
+        // return $request;
+        $dispatchStatus = $request->status ?? '';
+
+        $grade_name = $origin = $dispatch_status =null;
+        if($request->grade_name != null){
+           $grade_name = $request->grade_name;
+        }
+        if($request->origin != null){
+            $origin = $request->origin;
+        }
+        if($request->dispatch_status != null){
+            $dispatch_status = $request->dispatch_status;
+         }
         // return $request;
         if ($request->date_range != null)
         {
@@ -33,7 +45,7 @@ class ReportController extends Controller
         }
 
 
-        return (new QRReportExport($fromDate, $toDate))
+        return (new QRReportExport($fromDate, $toDate, $grade_name, $origin, $dispatchStatus))
                 ->download('QR_Report_Export ' .$_START. ' - ' .$_END. '.csv');
 
     }

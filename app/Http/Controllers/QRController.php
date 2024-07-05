@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Origin;
 use App\Models\QRData;
+use App\Models\Gradename;
 use Illuminate\View\View;
 use App\Models\QRTempData;
-use App\Exports\QRDataExport;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\QRDataExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Maatwebsite\Excel\Facades\Excel;
 
 class QRController extends Controller
 {
@@ -18,6 +20,8 @@ class QRController extends Controller
     public function QRGen(Request $request)
     {
         // dd(auth()->user()->type);
+        $gradenames = Gradename::all();
+        $origins = Origin::all();
         $folderPath = public_path('qrcodes');
         $files = File::files($folderPath);
 
@@ -31,7 +35,7 @@ class QRController extends Controller
         $qr_url = asset('qrcodes/qr_' . $LST_ID . '.png');
         // return auth()->user();
         if (auth()->user()->type == "admin") {
-            return view('Admin.qr', compact('qrCode', 'qr', 'qr_url'));
+            return view('Admin.qr', compact('qrCode', 'qr', 'qr_url','gradenames', 'origins'));
         }
         if (auth()->user()->type == "user") {
             return view('User.qr', compact('qrCode', 'qr', 'qr_url'));
@@ -41,9 +45,56 @@ class QRController extends Controller
         }
     }
 
+
+
+    // public function QRCodeReport(Request $request)
+    // {
+    //     $_PAGINATE = 50;
+
+    //     // Initialize query builder
+    //     $query = QRData::query();
+
+    //     // Date Range filter
+    //     if (isset($_GET['date_range']) && $_GET['date_range'] != null) {
+    //         $dateRange = $_GET['date_range'];
+    //         list($startDate, $endDate) = explode(' - ', $dateRange);
+
+    //         $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
+    //         $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
+
+    //         $formattedFromDate = $fromDate->format('Y-m-d H:i:s');
+    //         $formattedToDate = $toDate->format('Y-m-d H:i:s');
+
+    //         $query->whereBetween('created_at', [$formattedFromDate, $formattedToDate]);
+    //     }
+
+    //     // Status filter
+    //     if (isset($_GET['status']) && $_GET['status'] != null && $_GET['status'] != 'Open this select menu') {
+    //         $query->where('dispatch_status', $_GET['status']);
+    //     }
+
+    //     // Grade Name filter
+    //     if (isset($_GET['grade_name']) && $_GET['grade_name'] != null) {
+    //         $gradeName = $_GET['grade_name'];
+    //         $query->where('grade_name', 'LIKE', "%{$gradeName}%");
+    //     }
+
+    //     // Execute the query and paginate results
+    //     $qr_latest = $query->orderBy('created_at', 'desc')->paginate($_PAGINATE);
+
+    //     // Return view based on user type
+    //     if (auth()->user()->type == "admin") {
+    //         return view('Admin.qr-report', compact('qr_latest'));
+    //     } elseif (auth()->user()->type == "user") {
+    //         return view('Supervisor.qr-report', compact('qr_latest'));
+    //     }
+    // }
+
     public function QRCodeReport(Request $request)
     {
         $_PAGINATE = 50;
+        $gradenames = Gradename::all();
+        $origins = Origin::all();
 
         if (isset($_GET['date_range']) && $_GET['date_range'] != null) {
             $dateRange = $_GET['date_range'];
@@ -59,23 +110,26 @@ class QRController extends Controller
             $qr_latest = QRData::whereBetween('created_at', [$formattedFromDate, $formattedToDate])
                 ->orderBy('id', 'desc')
                 ->paginate($_PAGINATE);
-        } elseif (isset($_GET['status']) && $_GET['status'] != null && $_GET['status'] != 'Open this select menu') {
+        }
+        elseif (isset($_GET['status']) && $_GET['status'] != null && $_GET['status'] != 'Open this select menu') {
             $qr_latest = QRData::where('dispatch_status', $_GET['status'])->orderBy('created_at', 'desc')->paginate($_PAGINATE);
-        } elseif (isset($_GET['search_item']) && $_GET['search_item'] != null) {
+        }
+        elseif (isset($_GET['search_item']) && $_GET['search_item'] != null) {
             $searchItem = $_GET['search_item'];
 
             $qr_latest = QRData::where('grade_name', 'LIKE', "%{$searchItem}%")
-                ->orWhere('batch_no', 'LIKE', "%{$searchItem}%")
-                ->orWhere('lot_no', 'LIKE', "%{$searchItem}%")
-                ->orderBy('created_at', 'desc')
-                ->paginate($_PAGINATE);
-        } else {
+                        ->orWhere('batch_no', 'LIKE', "%{$searchItem}%")
+                        ->orWhere('lot_no', 'LIKE', "%{$searchItem}%")
+                        ->orderBy('created_at', 'desc')
+                        ->paginate($_PAGINATE);
+        }
+        else {
             $qr_latest = QRData::orderBy('created_at', 'desc')->paginate($_PAGINATE);
             // return $qr_latest;
         }
 
         if (auth()->user()->type == "admin") {
-            return view('Admin.qr-report', compact('qr_latest'));
+            return view('Admin.qr-report', compact('qr_latest','gradenames', 'origins'));
         }
         if (auth()->user()->type == "user") {
             return view('Supervisor.qr-report', compact('qr_latest'));
@@ -231,7 +285,6 @@ class QRController extends Controller
         return response()->download($download_qr)->deleteFileAfterSend(true);
     }
 
-
     public function QRCodeImage($id)
     {
         // Fetch QR code data from database
@@ -284,10 +337,11 @@ class QRController extends Controller
         // Download the QR code file
         // return response()->download($qrCodePath)->deleteFileAfterSend(true);
     }
+
     public function downloadExcel(Request $request)
     {
         $gradeName = $request->input('grade_name');
-        $dispatchStatus = 'In Stock';
+        $dispatchStatus = 'In_Stock';
 
         return Excel::download(new QRDataExport($gradeName, $dispatchStatus), 'qr_data.xlsx');
     }

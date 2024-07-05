@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SupervisorController;
 use App\Http\Controllers\ProductivityReportController;
 
@@ -75,9 +76,11 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/admin/home', [HomeController::class, 'adminHome'])->name('admin.home');
     Route::get('/admin/qr/form', [QRController::class, 'QRGen'])->name('admin.qr');
     Route::post('/admin/qr/temp', [QRController::class, 'QRTempData'])->name('admin.qr.temp');
+
     Route::get('/admin/download-qrcode', [QRController::class, 'downloadQRCode'])->name('admin.download-qrcode');
     Route::get('/admin/qrcode/report', [QRController::class, 'QRCodeReport'])->name('admin.qrcode-report');
     Route::get('/admin/qrcode/download', [ReportController::class, 'QRCodeReportDownload'])->name('download-qr-report');
+    Route::get('/admin/qrcode/download/grade', [QRController::class, 'downloadExcel'])->name('download-qr-report-grade');
 
 
     Route::get('/download-excel', [QRController::class, 'downloadExcel'])->name('qr.downloadExcel');
@@ -99,6 +102,22 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
 
     Route::get('/admin/get-qr-image/{id?}', [QRController::class, 'downloadQRCodeView'])->name('get-qr-image');
+
+
+    //SettingController
+    Route::get('/admin/setting', [SettingController::class, 'view'])->name('admin.setting');
+    //grade name
+    Route::post('/admin/add_grade', [SettingController::class, 'create_grade'])->name('admin.add_grade');
+    Route::get('/admin/edit_grade/{id}', [SettingController::class, 'editGrade'])->name('admin.edit_grade');
+    //Route::put('/admin/update_grade/{id}', [SettingController::class, 'updateGrade'])->name('admin.update_grade');
+    Route::post('/admin/update_grade', [SettingController::class, 'updateGrade'])->name('admin.update_grade');
+    Route::delete('/admin/delete_grade/{id}', [SettingController::class, 'deleteGrade'])->name('admin.delete_grade');
+    //origin
+    Route::post('/admin/add_origin', [SettingController::class, 'create_origin'])->name('admin.add_origin');
+    Route::get('/admin/edit_origin/{id?}', [SettingController::class, 'editorigin'])->name('admin.edit_origin');
+    Route::post('/admin/update_origin', [SettingController::class, 'updateorigin'])->name('admin.update_origin');
+    Route::delete('/admin/delete_origin/{id}', [SettingController::class, 'deleteorigin'])->name('admin.delete_origin');
+
 });
 
 Route::middleware(['auth', 'user-access:supervisor'])->group(function () {

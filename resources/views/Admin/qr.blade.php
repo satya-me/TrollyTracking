@@ -1,7 +1,11 @@
 @extends('layouts.master')
 
 @section('css')
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
+
 
 @section('content')
     <div class="app-content pt-3 p-md-3 p-lg-4">
@@ -32,59 +36,55 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="email mb-3">
-                                            <label class="lable_style" for="Grade">Grade Name</label>
-                                            <input id="Grade" name="grade_name" type="text" class="form-control"
-                                                placeholder="Enter Grade Name" required="required"
-                                                value="{{ $qr->grade_name ?? '' }}">
+                                            <label class="lable_style" for="grade_name">Grade Name</label>
+                                            <select class="form-select" name="grade_name" id="grade_name" aria-label="Default select example">
+                                                <option value="">Grade Name</option>
+                                                @foreach($gradenames as $gradename)
+                                                    <option value="{{ $gradename->grade_name }}" {{ request()->input('grade_name') == $gradename->grade_name ? 'selected' : '' }}>{{ $gradename->grade_name }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="email mb-3">
                                             <label class="lable_style" for="Origin">Origin</label>
-                                            <input id="Origin" name="origin" type="text" class="form-control"
-                                                placeholder="Enter Origin Name" required="required"
-                                                value="{{ $qr->origin ?? '' }}">
+                                            <select class="form-select" name="origin" id="Origin" aria-label="Default select example">
+                                                <option value="">Select Origin</option>
+                                                @foreach($origins as $origin)
+                                                    <option value="{{ $origin->origin }}" {{ request()->input('origin') == $origin->origin ? 'selected' : '' }}>{{ $origin->origin }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="email mb-3">
                                             <label class="lable_style" for="BatchNo">Batch No</label>
-                                            <input id="BatchNo" name="batch_no" type="text" class="form-control"
-                                                placeholder="Enter Batch No" required="required"
-                                                value="{{ $qr->batch_no ?? '' }}">
+                                            <input id="BatchNo" name="batch_no" type="text" class="form-control" placeholder="Enter Batch No" required="required" value="{{ $qr->batch_no ?? '' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="email mb-3">
                                             <label class="lable_style" for="net_weight">Net Weight</label>
-                                            <input id="net_weight" name="net_weight" type="text" class="form-control"
-                                                placeholder="Enter Net weight Name" required="required"
-                                                value="{{ $qr->net_weight ?? '' }}">
+                                            <input id="net_weight" name="net_weight" type="text" class="form-control" placeholder="Enter Net weight Name" required="required" value="{{ $qr->net_weight ?? '' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="email mb-3">
                                             <label class="lable_style" for="Gross">Gross Weight</label>
-                                            <input id="Gross" name="gross_weight" type="text" class="form-control"
-                                                placeholder="Enter Gross Weight" required="required"
-                                                value="{{ $qr->gross_weight ?? '' }}">
+                                            <input id="Gross" name="gross_weight" type="text" class="form-control" placeholder="Enter Gross Weight" required="required" value="{{ $qr->gross_weight ?? '' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="email mb-3">
                                             <label class="lable_style" for="lot">Lot No</label>
-                                            <input id="lot" name="lot_no" type="text" class="form-control"
-                                                placeholder="Enter Lot No" required="required"
-                                                value="{{ $qr->lot_no ?? '' }}">
+                                            <input id="lot" name="lot_no" type="text" class="form-control" placeholder="Enter Lot No" required="required" value="{{ $qr->lot_no ?? '' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6 mt-2">
                                         <br>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <button type="button" class="btn-edit js-edit"
-                                                    style="background-color: #FA503C;color: #fff;">Edit</button>
-
+                                                <button type="button" class="btn-edit js-edit" style="background-color: #FA503C;color: #fff;">Edit</button>
                                             </div>
                                             <div class="col-md-8">
                                                 <button type="submit" class="generate_btn">Generate QR</button>
@@ -103,7 +103,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </form>
 
                     </div><!--//app-card-->
@@ -146,6 +145,8 @@
 @endsection
 
 @section('js')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         function openQRPage() {
             const qrCodeUrl = "{{ $qr_url }}";
@@ -187,4 +188,14 @@
             newWindow.document.close();
         }
     </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#grade_name').select2({
+                placeholder: "Select Grade Name",
+                allowClear: true
+            });
+        });
+    </script>
+
 @endsection

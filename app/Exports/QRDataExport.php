@@ -5,6 +5,7 @@ use App\Models\QRData;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Illuminate\Support\Facades\DB; // Import the DB facade
 
 class QRDataExport implements FromQuery, WithHeadings
 {
@@ -22,21 +23,19 @@ class QRDataExport implements FromQuery, WithHeadings
     public function query()
     {
         return QRData::query()
+            ->select('grade_name', DB::raw('COUNT(*) as quantity'), 'origin')
             ->where('grade_name', $this->gradeName)
-            ->where('dispatch_status', $this->dispatchStatus);
+            ->where('dispatch_status', $this->dispatchStatus)
+            ->groupBy('grade_name', 'origin')
+            ->orderBy('grade_name');
     }
 
     public function headings(): array
     {
         return [
-            'Dispatch Status',
             'Grade Name',
+            'Quantity',
             'Origin',
-            'Batch No',
-            'Net Weight',
-            'Gross Weight',
-            'Lot No',
-            'Created Date',
         ];
     }
 }

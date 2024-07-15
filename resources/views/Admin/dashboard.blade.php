@@ -68,20 +68,21 @@
             <div class="floor-plan">
                 <div class="box">
                     <div class="content">
-                        <div class="name">RCN RECEVING</div>
+                        <div class="name">VILLAGE</div>
                     </div>
                     <div class="trolly_showing">
-                        @foreach($departments['RCN RECEVING'] ?? [] as $trolly)
+                        @foreach($departments['VILLAGE'] ?? [] as $trolly)
                             <div class="trolly_box">{{ $trolly->trolly_name }}</div>
                         @endforeach
                     </div>
                 </div>
+
                 <div class="box">
                     <div class="content">
-                        <div class="name">RCN GRADING</div>
+                        <div class="name">BORMA/ DRYING(Final)</div>
                     </div>
                     <div class="trolly_showing">
-                        @foreach($departments['RCN GRADING'] ?? [] as $trolly)
+                        @foreach($departments['BORMA/ DRYING(Final)'] ?? [] as $trolly)
                             <div class="trolly_box">{{ $trolly->trolly_name }}</div>
                         @endforeach
                     </div>
@@ -108,10 +109,10 @@
                 </div>
                 <div class="box">
                     <div class="content">
-                        <div class="name">BORMA/ DRYING</div>
+                        <div class="name">BORMA/ DRYING(New)</div>
                     </div>
                     <div class="trolly_showing">
-                        @foreach($departments['BORMA/ DRYING'] ?? [] as $trolly)
+                        @foreach($departments['BORMA/ DRYING(New)'] ?? [] as $trolly)
                             <div class="trolly_box">{{ $trolly->trolly_name }}</div>
                         @endforeach
                     </div>
@@ -146,6 +147,7 @@
                         @endforeach
                     </div>
                 </div>
+
                 <div class="box">
                     <div class="content">
                         <div class="name">HAMSA</div>
@@ -206,6 +208,17 @@
                         @endforeach
                     </div>
                 </div>
+                <div class="box">
+                    <div class="content">
+                        <div class="name">OUTSIDE VILLAGE</div>
+                    </div>
+                    <div class="trolly_showing">
+                        @foreach($departments['OUTSIDE VILLAGE'] ?? [] as $trolly)
+                            <div class="trolly_box">{{ $trolly->trolly_name }}</div>
+                        @endforeach
+                    </div>
+                </div>
+
             </div>
         </div><!--//app-content-->
 

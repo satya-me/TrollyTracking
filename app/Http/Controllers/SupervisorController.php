@@ -58,31 +58,37 @@ class SupervisorController extends Controller
 
     public function UpdatetrollyStatus(Request $request)
     {
+        // return $request;
         $data = $request->validate([
             'trolly_name' => 'required|string',
             'supervisor' => 'required|string',
-            'department' => 'required|string'
+            'supervisor_id' => 'required|string',
+            'department' => 'required|string',
+            'place' => 'required|string',
+            'quantity' => 'required|integer'
         ]);
 
-        // Check if the supervisor has already scanned the trolly and exit_time is null
-        $existingRecord = ProductivityReport::where('trolly_name', $data['trolly_name'])
-            ->where('supervisor', $data['supervisor'])
-            ->where('trolly_name', $data['trolly_name'])
-            ->whereNull('exit_time')
-            ->first();
+        try {
+            $existingRecord = ProductivityReport::where('trolly_name', $data['trolly_name'])
+                ->where('supervisor', $data['supervisor'])
+                ->whereNull('exit_time')
+                ->first();
 
-        if ($existingRecord) {
-            // If the supervisor has already scanned the trolly and exit_time is null, return an error response
-            return response()->json([
-                'error' => 'You have already scanned this trolly.',
-                'status' => 400
-            ]);
-        } else {
+            if ($existingRecord) {
+                return response()->json([
+                    'error' => 'You have already scanned this trolly.',
+                    'status' => 200
+                ]);
+            }
+
             $newRecord = [
                 'trolly_name' => $data['trolly_name'],
-                'supervisor' => $data['supervisor'],
+                'supervisor' => $data['supervisor_id'],
                 'department' => $data['department'],
+                'name' => $data['supervisor'],
                 'entry_time' => Carbon::now(),
+                'place' => $data['place'],
+                'quantity' => $data['quantity']
             ];
 
             $latestReport = ProductivityReport::where('trolly_name', $newRecord['trolly_name'])->latest()->first();
@@ -98,11 +104,15 @@ class SupervisorController extends Controller
                 ]);
             }
 
-
             ProductivityReport::create($newRecord);
 
             return response()->json([
                 'message' => 'Data stored successfully',
+                'status' => 200
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred while storing the data: ' . $e->getMessage(),
                 'status' => 200
             ]);
         }

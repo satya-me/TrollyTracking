@@ -47,11 +47,12 @@
                                 <div class="col-md-6">
                                     <label class="lable_style" for="Origin">Department</label>
                                     <select class="form-select" name="department">
-                                        <option value="RCN RECEVING">RCN RECEVING</option>
-                                        <option value="RCN GRADING">RCN GRADING</option>
+                                        <option value="">Select</option>
+                                        <option value="VILLAGE">VILLAGE</option>
                                         <option value="RCN BOILING">RCN BOILING</option>
                                         <option value="SCOOPING">SCOOPING</option>
-                                        <option value="BORMA/ DRYING">BORMA/ DRYING</option>
+                                        <option value="BORMA/ DRYING(New)">BORMA/ DRYING(New)</option>
+                                        <option value="BORMA/ DRYING(Final)">BORMA/ DRYING(Final)</option>
                                         <option value="PEELING">PEELING</option>
                                         <option value="SMALL TAIHO">SMALL TAIHO</option>
                                         <option value="MAYUR">MAYUR</option>
@@ -61,6 +62,7 @@
                                         <option value="SHORTING">SHORTING</option>
                                         <option value="DP & DS GRADING">DP & DS GRADING</option>
                                         <option value="PACKING">PACKING</option>
+                                        <option value="OUTSIDE VILLAGE">OUTSIDE VILLAGE</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
@@ -181,11 +183,11 @@
                             <div class="col-md-12">
                                 <label class="lable_style" for="edit-department">Department</label>
                                 <select class="form-select" name="department" id="edit-department">
-                                    <option value="RCN RECEVING">RCN RECEVING</option>
-                                    <option value="RCN GRADING">RCN GRADING</option>
+                                    <option value="VILLAGE">VILLAGE</option>
                                     <option value="RCN BOILING">RCN BOILING</option>
                                     <option value="SCOOPING">SCOOPING</option>
-                                    <option value="BORMA/ DRYING">BORMA/ DRYING</option>
+                                    <option value="BORMA/ DRYING(New)">BORMA/ DRYING(New)</option>
+                                    <option value="BORMA/ DRYING(Final)">BORMA/ DRYING(Final)</option>
                                     <option value="PEELING">PEELING</option>
                                     <option value="SMALL TAIHO">SMALL TAIHO</option>
                                     <option value="MAYUR">MAYUR</option>
@@ -195,6 +197,7 @@
                                     <option value="SHORTING">SHORTING</option>
                                     <option value="DP & DS GRADING">DP & DS GRADING</option>
                                     <option value="PACKING">PACKING</option>
+                                    <option value="OUTSIDE VILLAGE">OUTSIDE VILLAGE</option>
                                 </select>
                             </div>
                             <div class="col-md-12">

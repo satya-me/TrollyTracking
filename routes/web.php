@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QRController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\PrintController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\OpeningController;
+
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SummeryController;
 use App\Http\Controllers\SupervisorController;
 use App\Http\Controllers\ProductivityReportController;
 
@@ -79,6 +81,10 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     Route::get('/admin/download-qrcode', [QRController::class, 'downloadQRCode'])->name('admin.download-qrcode');
     Route::get('/admin/qrcode/report', [QRController::class, 'QRCodeReport'])->name('admin.qrcode-report');
+
+    Route::get('/admin/qrcode/search', [QRController::class, 'search'])->name('admin.qrcode-search');
+
+
     Route::get('/admin/qrcode/download', [ReportController::class, 'QRCodeReportDownload'])->name('download-qr-report');
     Route::get('/admin/qrcode/download/grade', [QRController::class, 'downloadExcel'])->name('download-qr-report-grade');
 
@@ -118,12 +124,19 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('/admin/update_origin', [SettingController::class, 'updateorigin'])->name('admin.update_origin');
     Route::delete('/admin/delete_origin/{id}', [SettingController::class, 'deleteorigin'])->name('admin.delete_origin');
 
+    Route::get('/openings', [OpeningController::class, 'index'])->name('openings.index');
+    Route::post('/openings', [OpeningController::class, 'store'])->name('openings.store');
+    Route::put('/openings/{id}', [OpeningController::class, 'update'])->name('openings.update');
+    Route::delete('/openings/{id}', [OpeningController::class, 'destroy'])->name('openings.destroy');
+    Route::get('product_summery', [SummeryController::class, 'summery'])->name('product_summery');
+
 });
 
 Route::middleware(['auth', 'user-access:supervisor'])->group(function () {
     Route::get('/supervisor/scan', [SupervisorController::class, 'ScanQR'])->name('supervisor.scan');
     Route::get('/supervisor/trolly/scan', [ProductivityReportController::class, 'ScanTrollyQR'])->name('supervisor.trollyScan');
     Route::post('/scan-qr', [ProductivityReportController::class, 'store'])->name('scan-qr');
+
 });
 
 

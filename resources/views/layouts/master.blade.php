@@ -159,8 +159,6 @@
                             </a>
                         </li>
 
-
-
                         <li class="nav-item">
                             <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
                             <a class="nav-link {{ \Route::currentRouteName() == 'admin.productivity' ? 'active' : '' }}"
@@ -172,6 +170,32 @@
                                 <span class="nav-link-text" style="margin-left: 5px;">Productivity Report</span>
                             </a><!--//nav-link-->
                         </li><!--//nav-item-->
+
+                        <li class="nav-item">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link {{ \Route::currentRouteName() == 'openings.index' ? 'active' : '' }}"
+                                href="{{ route('openings.index') }}">
+                                <span class="nav-icon">
+                                    <iconify-icon icon="bi:bar-chart-line" width="30" height="30"
+                                        style="color: #15a362"></iconify-icon>
+                                </span>
+                                <span class="nav-link-text" style="margin-left: 5px;">Add Opening</span>
+                            </a><!--//nav-link-->
+                        </li><!--//nav-item-->
+
+                        <li class="nav-item">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link {{ \Route::currentRouteName() == 'product_summery' ? 'active' : '' }}"
+                                href="{{ route('product_summery') }}">
+                                <span class="nav-icon">
+                                    <iconify-icon icon="oui:app-reporting" width="30" height="30"
+                                        style="color: #15a362"></iconify-icon>
+                                </span>
+                                <span class="nav-link-text" style="margin-left: 5px;"> Product Summery</span>
+                            </a><!--//nav-link-->
+                        </li><!--//nav-item-->
+
+
                         <li class="nav-item">
                             <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
                             <a class="nav-link {{ \Route::currentRouteName() == 'admin.qr' ? 'active' : '' }}"

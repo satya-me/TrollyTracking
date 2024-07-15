@@ -9,7 +9,7 @@ class ProductivityReport extends Model
     use HasFactory;
     protected $fillable = [
         'trolly_name', 'department', 'supervisor',
-        'entry_time', 'exit_time', 'total_time',
+        'entry_time', 'exit_time', 'total_time','place','name','quantity','opening',
     ];
 
 }

@@ -14,71 +14,81 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="mb-3 ">
+                                        <?php
+                                        // Get the status from the GET request
+                                        $status = isset($_GET['status']) ? $_GET['status'] : '';
+                                        ?>
+
                                         <form id="statusForm" class="p-2" action="{{ route('admin.qrcode-report') }}"
-                                        method="GET">
-                                                <select class="form-select " name="status" id="statusSelect"
-                                                    aria-label="Default select example">
-                                                    <option selected>Status</option>
-                                                    <option value="Production">Production</option>
-                                                    <option value="Dispatched">Dispatched</option>
-                                                </select>
+                                            method="GET">
+                                            <select class="form-select" name="status" id="statusSelect"
+                                                aria-label="Default select example">
+                                                <option value="" <?php echo $status == '' ? 'selected' : ''; ?>>Status</option>
+                                                <option value="In_Stock" <?php echo $status == 'In_Stock' ? 'selected' : ''; ?>>In Stock</option>
+                                                <option value="In_Stock" <?php echo $status == 'In_Stock' ? 'selected' : ''; ?>>In Hand</option>
+                                                <option value="Dispatched" <?php echo $status == 'Dispatched' ? 'selected' : ''; ?>>Dispatched</option>
+                                            </select>
                                         </form>
                                     </div>
                                 </div>
                             </div>
 
-                            <form id="qrReportForm" class="p-2" action="{{ route('download-qr-report') }}" method="GET">
+                            <form id="qrReportForm" class="p-2" action="{{ route('download-qr-report') }}"
+                                method="GET">
                                 <div class="row">
-
+                                    <input type="hidden" name="status" value=<?php echo $status; ?>>
                                     <!-- <div class="col-md-3">
-                                        <div class="mb-3 ">
-                                            <form id="statusForm" class="p-2" action="{{ route('admin.qrcode-report') }}"
-                                            method="GET">
-                                                    <select class="form-select " name="status" id="statusSelect"
-                                                        aria-label="Default select example">
-                                                        <option selected>Status</option>
-                                                        <option value="Production">Production</option>
-                                                        <option value="Dispatched">Dispatched</option>
-                                                    </select>
-                                            </form>
-                                        </div>
-                                    </div> -->
-
+                                                <div class="mb-3 ">
+                                                    <form id="statusForm" class="p-2" action="{{ route('admin.qrcode-report') }}"
+                                                    method="GET">
+                                                            <select class="form-select " name="status" id="statusSelect"
+                                                                aria-label="Default select example">
+                                                                <option selected>Status</option>
+                                                                <option value="Production">Production</option>
+                                                                <option value="Dispatched">Dispatched</option>
+                                                            </select>
+                                                    </form>
+                                                </div>
+                                            </div> -->
                                     <div class="col-md-3">
-
-                                            <div class="date_filter mb-3">
-                                                <input type="text" id="date_range" class="form-control" name="date_range"
-                                                    value="<?php echo isset($_GET['date_range']) && $_GET['date_range'] != '' ? htmlspecialchars($_GET['date_range']) : ''; ?>" />
-                                            </div>
-
+                                        <div class="date_filter mb-3">
+                                            <input type="text" id="date_range" class="form-control" name="date_range"
+                                                value="{{ request()->input('date_range', '') }}" />
+                                        </div>
                                     </div>
 
                                     <div class="col-md-3">
-
-                                            <div class="date_filter mb-3">
-                                                <input type="text" id="grade_name" name="grade_name" class="form-control mb-2" placeholder="Grade Name"
-                                                    value="{{ request()->input('grade_name', '') }}">
-                                            </div>
-
+                                        <div class="date_filter mb-3">
+                                            <select id="grade_name" name="grade_name" class="form-select ">
+                                                <option value="">Select Grade Name</option>
+                                                @foreach ($gradenames as $gradename)
+                                                    <option value="{{ $gradename->grade_name }}"
+                                                        {{ request()->input('grade_name') == $gradename->grade_name ? 'selected' : '' }}>
+                                                        {{ $gradename->grade_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-3">
-
-                                            <div class="date_filter mb-3">
-                                                <input type="text" id="origin" name="origin" class="form-control mb-2" placeholder="Origin"
-                                                    value="{{ request()->input('origin', '') }}">
-                                            </div>
-
+                                        <div class="date_filter mb-3">
+                                            <select id="origin" name="origin" class="form-select ">
+                                                <option value="">Select Origin</option>
+                                                @foreach ($origins as $origin)
+                                                    <option value="{{ $origin->origin }}"
+                                                        {{ request()->input('origin') == $origin->origin ? 'selected' : '' }}>
+                                                        {{ $origin->origin }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
 
-
                             <div class="row">
                                 <div class="col-md-2">
-
                                     <input name="date_range" id="dateInput" type="hidden" value="">
                                     <button id="downloadButton" class="generate_btn">
                                         <span><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15"
@@ -87,41 +97,107 @@
                                                 <path
                                                     d="M20 18H4v-7H2v7c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-7h-2v7z" />
                                             </svg></span>
-                                        Download</button>
-
+                                        Download
+                                    </button>
+                                </div>
                             </div>
+
                             <br>
-                            {{-- <div class="row">
-                                <div class="col-md-3">
-                                    <input type="text" class="form-control" name="search_item"
-                                        placeholder="Grade or Batch or Lot" value="<?php echo isset($_GET['search_item']) && $_GET['search_item'] != '' ? htmlspecialchars($_GET['search_item']) : ''; ?>" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <button id="findButton" class="generate_btn">Find</button>
-                                </div>
-                            </div> --}}
-                            <div class="col-3 col-lg-4 mt-2 ">
+                            {{-- <div class="col-3 col-lg-4 mt-2 ">
+
                                 <form action="{{ route('admin.qrcode-report') }}" method="get">
                                     <div class="row">
+
                                         <div class="col-md-8">
                                             <input type="text" class="form-control" name="search_item"
                                                 placeholder="Grade or Batch or Lot" value="<?php echo isset($_GET['search_item']) && $_GET['search_item'] != '' ? htmlspecialchars($_GET['search_item']) : ''; ?>" required>
                                         </div>
+
                                         <div class="col-md-4">
                                             <button type="submit" class="generate_btn">Find</button>
                                         </div>
                                     </div>
 
                                 </form>
+                            </div> --}}
+
+
+                            <div class="row m-2">
+                                <form id="filterForm" class="p-2" action="{{ route('admin.qrcode-search') }}"
+                                    method="GET">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <input type="text" id="date_range_filter" class="form-control"
+                                                    name="date_range" value="{{ request('date_range', '') }}"
+                                                    placeholder="Date Range" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <select id="grade_name_filter" name="grade_name" class="form-select">
+                                                    <option value="">Select Grade Name</option>
+                                                    @foreach ($gradenames as $gradename)
+                                                        <option value="{{ $gradename->grade_name }}"
+                                                            {{ request('grade_name') == $gradename->grade_name ? 'selected' : '' }}>
+                                                            {{ $gradename->grade_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <input type="text" id="batch" class="form-control"
+                                                    name="batch_no" value="{{ request('batch_no', '') }}"
+                                                    placeholder="Batch No" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <input type="text" id="lot" class="form-control" name="lot_no"
+                                                    value="{{ request('lot_no', '') }}" placeholder="Lot No" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <select id="status_filter" name="dispatch_status" class="form-select">
+                                                    <option value="">Select Status</option>
+                                                    <option value="In_Stock"
+                                                        {{ request('dispatch_status') == 'In_Stock' ? 'selected' : '' }}>In
+                                                        Hand</option>
+                                                    <option value="In_Stock" <?php echo $status == 'In_Stock' ? 'selected' : ''; ?>>In Hand</option>
+                                                    <option value="Dispatched"
+                                                        {{ request('dispatch_status') == 'Dispatched' ? 'selected' : '' }}>
+                                                        Dispatched</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <button type="submit" class="btn btn-primary">Find</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
+
 
                             <!-- New section for downloading the Excel file -->
                             <div class="col-3 col-lg-4 mt-2 ">
                                 <form action="{{ route('download-qr-report-grade') }}" method="get">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="grade_name"
-                                                placeholder="Grade Name" required>
+                                            <select id="grade_name" name="grade_name" class="form-select ">
+                                                <option value="">Grade Name</option>
+                                                @foreach ($gradenames as $gradename)
+                                                    <option value="{{ $gradename->grade_name }}"
+                                                        {{ request()->input('grade_name') == $gradename->grade_name ? 'selected' : '' }}>
+                                                        {{ $gradename->grade_name }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="col-md-5">
                                             <button type="submit" class="generate_btn">Download</button>
@@ -148,6 +224,7 @@
                                                 <th class="cell">Lot No</th>
                                                 <th class="cell">QR Image</th>
                                                 <th class="cell">Created Date</th>
+                                                <th class="cell">Dispatch Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -166,7 +243,7 @@
                                                 @endphp
                                                 <tr>
                                                     <td class="cell"><span
-                                                            class="badge {{ $data->dispatch_status == 'Production' ? 'bg-danger' : 'bg-success' }}">{{ $data->dispatch_status }}</span>
+                                                            class="badge {{ $data->dispatch_status == 'In_Stock' ? 'bg-danger' : 'bg-success' }}">{{ $data->dispatch_status }}</span>
                                                     </td>
                                                     <td class="cell">{{ $data->grade_name }}</td>
                                                     <td class="cell">{{ $data->origin }}</td>
@@ -181,6 +258,9 @@
                                                         </a>
                                                     </td>
                                                     <td class="cell">{{ $data->created_at }}</td>
+                                                    <td class="cell">
+                                                        {{ $data->dispatch_status == 'Dispatched' ? $data->updated_at : '' }}
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -188,15 +268,24 @@
                                     <!-- Add pagination links -->
                                     <div class="pagination d-flex mt-4">
                                         {{ $qr_latest->links('pagination::bootstrap-5') }}
+
+                                    </div>
+
+                                    <!-- Display total count below the table -->
+                                    <div class="row mt-3 text-right px-5">
+                                        <p><b>Total Records = </b>{{ $totalCount }}</p>
+                                        <p><b>Total Dispatch = </b>{{ $dispatchedCount }}</p>
+                                        <p><b>Total InHand = </b>{{ $inhand }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Modal for viewing QR code -->
@@ -332,15 +421,24 @@
             // $('input[name="grade_name"]').on('apply.gradenamepicker', function(ev, picker) {
             //     $('#originForm').submit();
             // });
-            $("#downloadButton").click(function(){
+            $("#downloadButton").click(function() {
                 // Your code here
                 $('#qrReportForm').submit();
             });
-            $("#findButton").click(function(){
+            $("#findButton").click(function() {
                 // Your code here
                 $('#qrReportForm').submit();
             });
         });
     </script>
-
+    {{-- <script>
+        $(function() {
+            $("#downloadButton").click(function(){
+                $('#qrReportForm').submit();
+            });
+            $("#findButton").click(function(){
+                $('#qrReportForm').submit();
+            });
+        });
+    </script> --}}
 @endsection

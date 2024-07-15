@@ -12,5 +12,8 @@ class ProductivityReportController extends Controller
         return view('Supervisor.scan-trolly');
     }
 
-
+    public function summery()
+    {
+        return view('Admin.product_summery');
+    }
 }

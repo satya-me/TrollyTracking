@@ -35,7 +35,7 @@ class QRController extends Controller
         $qr_url = asset('qrcodes/qr_' . $LST_ID . '.png');
         // return auth()->user();
         if (auth()->user()->type == "admin") {
-            return view('Admin.qr', compact('qrCode', 'qr', 'qr_url','gradenames', 'origins'));
+            return view('Admin.qr', compact('qrCode', 'qr', 'qr_url', 'gradenames', 'origins'));
         }
         if (auth()->user()->type == "user") {
             return view('User.qr', compact('qrCode', 'qr', 'qr_url'));
@@ -45,59 +45,26 @@ class QRController extends Controller
         }
     }
 
-
-
-    // public function QRCodeReport(Request $request)
-    // {
-    //     $_PAGINATE = 50;
-
-    //     // Initialize query builder
-    //     $query = QRData::query();
-
-    //     // Date Range filter
-    //     if (isset($_GET['date_range']) && $_GET['date_range'] != null) {
-    //         $dateRange = $_GET['date_range'];
-    //         list($startDate, $endDate) = explode(' - ', $dateRange);
-
-    //         $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
-    //         $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
-
-    //         $formattedFromDate = $fromDate->format('Y-m-d H:i:s');
-    //         $formattedToDate = $toDate->format('Y-m-d H:i:s');
-
-    //         $query->whereBetween('created_at', [$formattedFromDate, $formattedToDate]);
-    //     }
-
-    //     // Status filter
-    //     if (isset($_GET['status']) && $_GET['status'] != null && $_GET['status'] != 'Open this select menu') {
-    //         $query->where('dispatch_status', $_GET['status']);
-    //     }
-
-    //     // Grade Name filter
-    //     if (isset($_GET['grade_name']) && $_GET['grade_name'] != null) {
-    //         $gradeName = $_GET['grade_name'];
-    //         $query->where('grade_name', 'LIKE', "%{$gradeName}%");
-    //     }
-
-    //     // Execute the query and paginate results
-    //     $qr_latest = $query->orderBy('created_at', 'desc')->paginate($_PAGINATE);
-
-    //     // Return view based on user type
-    //     if (auth()->user()->type == "admin") {
-    //         return view('Admin.qr-report', compact('qr_latest'));
-    //     } elseif (auth()->user()->type == "user") {
-    //         return view('Supervisor.qr-report', compact('qr_latest'));
-    //     }
-    // }
-
     public function QRCodeReport(Request $request)
     {
-        $_PAGINATE = 50;
+        $_PAGINATE = 10;
         $gradenames = Gradename::all();
         $origins = Origin::all();
 
-        if (isset($_GET['date_range']) && $_GET['date_range'] != null) {
-            $dateRange = $_GET['date_range'];
+        //$totalCount = 0; // Initialize total count
+        $totalCount = QRData::count(); // Get the total count of all records
+        $qr_latest = null; // Initialize qr_latest
+        // Count of In_Stock items
+        $inStockCount = QRData::where('dispatch_status', 'In_Stock')->count();
+
+        // Count of Dispatched items
+        $dispatchedCount = QRData::where('dispatch_status', 'Dispatched')->count();
+        $inhand = $totalCount  - $dispatchedCount;
+
+
+
+        if ($request->has('date_range') && $request->input('date_range') != null) {
+            $dateRange = $request->input('date_range');
 
             list($startDate, $endDate) = explode(' - ', $dateRange);
 
@@ -110,30 +77,108 @@ class QRController extends Controller
             $qr_latest = QRData::whereBetween('created_at', [$formattedFromDate, $formattedToDate])
                 ->orderBy('id', 'desc')
                 ->paginate($_PAGINATE);
-        }
-        elseif (isset($_GET['status']) && $_GET['status'] != null && $_GET['status'] != 'Open this select menu') {
-            $qr_latest = QRData::where('dispatch_status', $_GET['status'])->orderBy('created_at', 'desc')->paginate($_PAGINATE);
-        }
-        elseif (isset($_GET['search_item']) && $_GET['search_item'] != null) {
-            $searchItem = $_GET['search_item'];
+        } elseif ($request->has('status') && $request->input('status') != null) {
+            $status = $request->input('status');
+            $qr_latest = QRData::where('dispatch_status', $status)
+                ->orderBy('created_at', 'desc')
+                ->paginate($_PAGINATE);
+            // $totalCount = QRData::where('dispatch_status', $status)->count(); // Update the total count based on the status
+        } elseif ($request->has('search_item') && $request->input('search_item') != null) {
+            $searchItem = $request->input('search_item');
 
             $qr_latest = QRData::where('grade_name', 'LIKE', "%{$searchItem}%")
-                        ->orWhere('batch_no', 'LIKE', "%{$searchItem}%")
-                        ->orWhere('lot_no', 'LIKE', "%{$searchItem}%")
-                        ->orderBy('created_at', 'desc')
-                        ->paginate($_PAGINATE);
-        }
-        else {
+                ->orWhere('batch_no', 'LIKE', "%{$searchItem}%")
+                ->orWhere('lot_no', 'LIKE', "%{$searchItem}%")
+                ->orderBy('created_at', 'desc')
+                ->paginate($_PAGINATE);
+            // $totalCount = QRData::where('grade_name', 'LIKE', "%{$searchItem}%")
+            //     ->orWhere('batch_no', 'LIKE', "%{$searchItem}%")
+            //     ->orWhere('lot_no', 'LIKE', "%{$searchItem}%")
+            //     ->count(); // Update the total count based on the search item
+        } else {
             $qr_latest = QRData::orderBy('created_at', 'desc')->paginate($_PAGINATE);
-            // return $qr_latest;
         }
 
         if (auth()->user()->type == "admin") {
-            return view('Admin.qr-report', compact('qr_latest','gradenames', 'origins'));
+            return view('Admin.qr-report', compact('qr_latest', 'gradenames', 'origins', 'totalCount', 'inStockCount', 'dispatchedCount', 'inhand'));
         }
         if (auth()->user()->type == "user") {
-            return view('Supervisor.qr-report', compact('qr_latest'));
+            return view('Supervisor.qr-report', compact('qr_latest', 'totalCount'));
         }
+    }
+
+    public function search(Request $request)
+    {
+        // Fetch all gradenames and origins
+        $gradenames = Gradename::all();
+        $origins = Origin::all();
+
+        // Pagination count
+        $_PAGINATE = 10;
+
+        // Initialize query builder
+        $query = QRData::query();
+
+        // Extract inputs
+        $grade = $request->input('grade_name');
+        $dispatch_status = $request->input('dispatch_status');
+        $batch_no = $request->input('batch_no');
+        $lot_no = $request->input('lot_no');
+
+        // Date range filter
+        if ($request->has('date_range') && $request->input('date_range') != null) {
+            $dateRange = $request->input('date_range');
+            list($startDate, $endDate) = explode(' - ', $dateRange);
+
+            $fromDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay();
+            $toDate = Carbon::createFromFormat('m/d/Y', $endDate)->endOfDay();
+
+            $formattedFromDate = $fromDate->format('Y-m-d H:i:s');
+            $formattedToDate = $toDate->format('Y-m-d H:i:s');
+
+            $query->whereBetween('created_at', [$formattedFromDate, $formattedToDate]);
+        }
+
+        // Filter by grade_name (AND condition)
+        if ($grade != '') {
+            $query->where('grade_name', 'LIKE', "%{$grade}%");
+        }
+
+        // Filter by batch, lot, dispatch_status (OR condition)
+        if ($batch_no != '') {
+            $query->Where('batch_no', 'LIKE', "%{$batch_no}%");
+        }
+
+        if ($lot_no != '') {
+            $query->Where('lot_no', 'LIKE', "%{$lot_no}%");
+        }
+
+        if ($dispatch_status != '') {
+            $query->Where('dispatch_status', 'LIKE', "%{$dispatch_status}%");
+        }
+
+        // Order by created_at descending
+        $query->orderBy('created_at', 'desc');
+        // Paginate the results
+        $qr_latest = $query->paginate($_PAGINATE);
+
+        // Total count of QRData records
+        $totalCount = QRData::count();
+
+        if ($grade != '') {
+            $totalCount = QRData::where('grade_name',  'LIKE', "%{$grade}%")->count();
+            $inStockCount = $query->where('grade_name',  'LIKE', "%{$grade}%")->where('dispatch_status', 'In_Stock')->count();
+            $dispatchedCount = $totalCount - $inStockCount;
+            $inhand = $totalCount - $dispatchedCount;
+        } else {
+            $inStockCount = QRData::where('dispatch_status', 'In_Stock')->count();
+            $dispatchedCount = QRData::where('dispatch_status', 'Dispatched')->count();
+            $inhand = $totalCount - $dispatchedCount;
+        }
+
+
+        // Return view with data
+        return view('Admin.qr-report', compact('qr_latest', 'gradenames', 'origins', 'totalCount', 'inStockCount', 'dispatchedCount', 'inhand'));
     }
 
     public function QRTempData(Request $request)
@@ -289,7 +334,17 @@ class QRController extends Controller
     {
         // Fetch QR code data from database
         $qrData = QRTempData::first();
-        $qr_latest = QRData::latest()->first()->makeHidden(['supervisor', 'created_at', 'updated_at']);
+        // $qr_latest = QRData::latest()->first()->makeHidden(['supervisor', 'created_at', 'updated_at']);
+        $qr_latest = QRData::latest()->first();
+
+        if ($qr_latest) {
+            $qr_latest->makeHidden(['supervisor', 'created_at', 'updated_at']);
+        } else {
+            // Handle the case when there are no records
+            // For example, you can set $qr_latest to a default value or log an error
+            $qr_latest = ''; // Or any appropriate default value
+        }
+
         if (!$qrData) {
             return response()->json(['error' => 'No QR data found'], 404);
         }
@@ -345,5 +400,4 @@ class QRController extends Controller
 
         return Excel::download(new QRDataExport($gradeName, $dispatchStatus), 'qr_data.xlsx');
     }
-
 }

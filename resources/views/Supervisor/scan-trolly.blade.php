@@ -91,7 +91,59 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="scanModal" tabindex="-1" aria-labelledby="scanModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="scanModalLabel">Scan Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="scanForm">
+                        <div class="mb-3">
+                            {{-- <label for="place" class="form-label">Place</label> --}}
+                            <label class="lable_style" for="place">Place</label>
+                            {{-- <input type="text" class="form-control" id="place" name="place" required> --}}
+                            <select class="form-select" name="place">
+                                <option value="">Select</option>
+                                <option value="VILLAGE">VILLAGE</option>
+                                <option value="RCN BOILING">RCN BOILING</option>
+                                <option value="SCOOPING">SCOOPING</option>
+                                <option value="BORMA/ DRYING(New)">BORMA/ DRYING(New)</option>
+                                <option value="BORMA/ DRYING(Final)">BORMA/ DRYING(Final)</option>
+                                <option value="PEELING">PEELING</option>
+                                <option value="SMALL TAIHO">SMALL TAIHO</option>
+                                <option value="MAYUR">MAYUR</option>
+                                <option value="HAMSA">HAMSA</option>
+                                <option value="WHOLES GRADING">WHOLES GRADING</option>
+                                <option value="LW GRADING">LW GRADING</option>
+                                <option value="SHORTING">SHORTING</option>
+                                <option value="DP & DS GRADING">DP & DS GRADING</option>
+                                <option value="PACKING">PACKING</option>
+                                <option value="OUTSIDE VILLAGE">OUTSIDE VILLAGE</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="{{ Auth::user()->name }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="quantity" class="form-label">Quantity</label>
+                            <input type="number" class="form-control" id="quantity" name="quantity" required>
+                        </div>
+                        <input type="hidden" id="trolly_name" name="trolly_name">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -111,23 +163,8 @@
             }
 
             async function showScanResult(qrCodeMessage) {
-                const respElement = $('#resp');
-
-                try {
-                    let data = {
-                        supervisor: "{{ Auth::user()->id }}",
-                        // user_name: "{{ Auth::user()->name }}",
-                        department: "{{ Auth::user()->department }}",
-                        trolly_name: qrCodeMessage,
-                    };
-                    const parsedData = JSON.stringify(data);
-                    // alert(parsedData);
-                    await store(parsedData); // Send the data to the backend
-                } catch (error) {
-                    alert(error);
-                    Swal.fire("Invalid QR Code");
-                    respElement.html('<div class="alert alert-danger">Invalid QR Code</div>');
-                }
+                $('#trolly_name').val(qrCodeMessage);
+                $('#scanModal').modal('show');
             }
 
             function initScanner() {
@@ -144,70 +181,48 @@
                 initScanner();
             });
 
+            $('#scanForm').submit(function(e) {
+                e.preventDefault();
+                const formData = {
+                    supervisor: $('#name').val(),
+                    supervisor_id: "{{ Auth::user()->id }}",
+                    department: "{{ Auth::user()->department }}",
+                    trolly_name: $('#trolly_name').val(),
+                    place: $('#place').val(),
+                    quantity: $('#quantity').val()
+                };
+                store(formData);
+                $('#scanModal').modal('hide');
+            });
+
             initScanner();
         });
 
         async function store(params) {
-            // let params;
-
             try {
-                params = JSON.parse(params);
-
-                if (typeof params === 'object' && 'trolly_name' in params) {
-                    const trollyName = params.trolly_name;
-                    const validPattern =
-                        /^(N|W|C)([1-9]|[1-9][0-9]|100)$/; // Regular expression for N1-N100, W1-W100, or C1-C100
-
-                    if (validPattern.test(trollyName)) {
-                        console.log('Valid trolly_name:', trollyName);
-                        // Swal.fire('Error', response.error, 'error');
-                    } else {
-                        console.error('Invalid trolly_name:', trollyName);
-                        Swal.fire('Error', 'Invalid trolly name', 'error');
-                        return;
-                    }
-                }
-            } catch (e) {
-                console.error('Invalid JSON string:', e);
-                Swal.fire('Error', 'Invalid JSON string:', 'error');
-                return;
-            }
-
-            // return;
-
-            return new Promise((resolve, reject) => {
-                $.ajax({
+                const response = await $.ajax({
                     url: "{{ route('supervisor.trolly-status') }}",
                     type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(params),
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Content-Type': 'application/json'
                     },
-                    success: function(response) {
-                        console.log(response);
-                        if (response.status == 400) {
-
-                            Swal.fire('Error', response.error, 'error');
-                        } else {
-                            Swal.fire('Success', response.message, 'success');
-                        }
-
-                        // Swal.fire('Success', 'Data stored successfully!', 'success');
-                        resolve(response);
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.status === 200) {
-                            Swal.fire('Error', xhr.responseJSON.error, 'error');
-                        } else {
-                            console.error('Error:', error);
-                            Swal.fire('Error', 'An error occurred while storing the data.',
-                                'error');
-                        }
-                        reject('An error occurred while storing the data.');
-                    }
+                    data: JSON.stringify(params),
+                    dataType: 'json',
                 });
-            });
+                console.log(response);
+                // alart(response);
+
+                if (response.status == 400) {
+                    Swal.fire('Error', response.error, 'error');
+                } else {
+                    Swal.fire('Success', response.message, 'success');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire('Error', error, 'error');
+            }
         }
     </script>
 </body>

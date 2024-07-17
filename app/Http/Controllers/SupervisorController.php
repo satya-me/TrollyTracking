@@ -106,6 +106,8 @@ class SupervisorController extends Controller
 
             ProductivityReport::create($newRecord);
 
+            ((new BacklogController)->updateBacklog());
+
             return response()->json([
                 'message' => 'Data stored successfully',
                 'status' => 200

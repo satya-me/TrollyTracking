@@ -105,7 +105,7 @@
                             {{-- <label for="place" class="form-label">Place</label> --}}
                             <label class="lable_style" for="place">Place</label>
                             {{-- <input type="text" class="form-control" id="place" name="place" required> --}}
-                            <select class="form-select" name="place">
+                            <select class="form-select" name="place"  id="place">
                                 <option value="">Select</option>
                                 <option value="VILLAGE">VILLAGE</option>
                                 <option value="RCN BOILING">RCN BOILING</option>

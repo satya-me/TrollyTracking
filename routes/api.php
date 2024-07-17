@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BacklogController;
 use App\Http\Controllers\SupervisorController;
 
 /*
@@ -21,3 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/supervisor/dispatch/status', [SupervisorController::class, 'UpdateDispatchStatus'])->name('supervisor.dispatch-status');
 Route::post('/supervisor/dispatch/trolly', [SupervisorController::class, 'UpdatetrollyStatus'])->name('supervisor.trolly-status');
+
+
+Route::get('/cron', [BacklogController::class, 'Cron']);

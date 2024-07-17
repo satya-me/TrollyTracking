@@ -8,8 +8,9 @@ use App\Http\Controllers\QRController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\OpeningController;
+use App\Http\Controllers\BacklogController;
 
+use App\Http\Controllers\OpeningController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SummeryController;
 use App\Http\Controllers\SupervisorController;
@@ -64,7 +65,6 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::get('/user/download-qrcode', [QRController::class, 'downloadQRCode'])->name('user.download-qrcode');
     Route::get('/user/qrcode/report', [QRController::class, 'QRCodeReport'])->name('user.qrcode-report');
     Route::get('/download-qr-code', [QRController::class, 'downloadQRCodeView'])->name('download.qr.code');
-
 });
 
 /*------------------------------------------
@@ -126,9 +126,12 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     Route::get('/openings', [OpeningController::class, 'index'])->name('openings.index');
     Route::post('/openings', [OpeningController::class, 'store'])->name('openings.store');
-    Route::put('/openings/{id}', [OpeningController::class, 'update'])->name('openings.update');
+    Route::post('/openings/update', [OpeningController::class, 'update'])->name('openings.update');
     Route::delete('/openings/{id}', [OpeningController::class, 'destroy'])->name('openings.destroy');
+
     Route::get('product_summery', [SummeryController::class, 'summery'])->name('product_summery');
+    Route::get('/update-backlog', [BacklogController::class, 'updateBacklog'])->name('update-backlog');
+    //Route::get('/calculate-backlogs', [SummeryController::class, 'calculateAndStoreBacklogs'])->name('calculate-backlogs');
 
 });
 
@@ -136,7 +139,6 @@ Route::middleware(['auth', 'user-access:supervisor'])->group(function () {
     Route::get('/supervisor/scan', [SupervisorController::class, 'ScanQR'])->name('supervisor.scan');
     Route::get('/supervisor/trolly/scan', [ProductivityReportController::class, 'ScanTrollyQR'])->name('supervisor.trollyScan');
     Route::post('/scan-qr', [ProductivityReportController::class, 'store'])->name('scan-qr');
-
 });
 
 
@@ -145,3 +147,6 @@ Route::middleware(['auth', 'user-access:supervisor'])->group(function () {
     Route::get('/supervisor', [HomeController::class, 'supervisorHome'])->name('supervisor.home');
     Route::get('/supervisor/home', [HomeController::class, 'supervisorHome'])->name('supervisor.home');
 });
+
+
+

@@ -16,11 +16,12 @@
         <div class="form-group">
             <label for="department">Department</label>
             <select class="form-select" name="department" id="department">
-                <option value="RCN RECEVING" {{ $supervisor->department == 'RCN RECEVING' ? 'selected' : '' }}>RCN RECEVING</option>
-                <option value="RCN GRADING" {{ $supervisor->department == 'RCN GRADING' ? 'selected' : '' }}>RCN GRADING</option>
+                <option value="VILLAGE" {{ $supervisor->department == 'VILLAGE' ? 'selected' : '' }}>VILLAGE</option>
+                <option value="OUTSIDE VILLAGE" {{ $supervisor->department == 'OUTSIDE VILLAGE' ? 'selected' : '' }}>OUTSIDE VILLAGE</option>
                 <option value="RCN BOILING" {{ $supervisor->department == 'RCN BOILING' ? 'selected' : '' }}>RCN BOILING</option>
                 <option value="SCOOPING" {{ $supervisor->department == 'SCOOPING' ? 'selected' : '' }}>SCOOPING</option>
-                <option value="BORMA/ DRYING" {{ $supervisor->department == 'BORMA/ DRYING' ? 'selected' : '' }}>BORMA/ DRYING</option>
+                <option value="BORMA/ DRYING(New)" {{ $supervisor->department == 'BORMA/ DRYING(New)' ? 'selected' : '' }}>BORMA/ DRYING(New)</option>
+                <option value="BORMA/ DRYING(Final)" {{ $supervisor->department == 'BORMA/ DRYING(Final)' ? 'selected' : '' }}>BORMA/ DRYING(Final)</option>
                 <option value="PEELING" {{ $supervisor->department == 'PEELING' ? 'selected' : '' }}>PEELING</option>
                 <option value="SMALL TAIHO" {{ $supervisor->department == 'SMALL TAIHO' ? 'selected' : '' }}>SMALL TAIHO</option>
                 <option value="MAYUR" {{ $supervisor->department == 'MAYUR' ? 'selected' : '' }}>MAYUR</option>

@@ -18,6 +18,7 @@ class OpeningController extends Controller
         $request->validate([
             'department' => 'required',
             'opening' => 'required|numeric',
+            'is_new_opening' => 'required|string'
         ]);
 
         Opening::create($request->all());
@@ -25,15 +26,21 @@ class OpeningController extends Controller
         return redirect()->back()->with('success', 'Opening added successfully.');
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+        // return $request->open_id;
         $request->validate([
             'department' => 'required',
             'opening' => 'required|numeric',
+            'is_new_opening' => 'required|string'
         ]);
 
-        $opening = Opening::findOrFail($id);
-        $opening->update($request->all());
+        // Use findOrFail to handle cases where the record might not exist
+        $opening = Opening::findOrFail($request->open_id);
+        $opening->department = $request->department;
+        $opening->opening = $request->opening;
+        $opening->is_new_opening = $request->is_new_opening;
+        $opening->save();
 
         return redirect()->back()->with('success', 'Opening updated successfully.');
     }

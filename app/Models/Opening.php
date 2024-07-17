@@ -9,6 +9,6 @@ class Opening extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'department','opening',
+        'department', 'opening', 'is_new_opening',
     ];
 }

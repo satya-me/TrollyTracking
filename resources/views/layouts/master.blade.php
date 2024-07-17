@@ -191,7 +191,7 @@
                                     <iconify-icon icon="oui:app-reporting" width="30" height="30"
                                         style="color: #15a362"></iconify-icon>
                                 </span>
-                                <span class="nav-link-text" style="margin-left: 5px;"> Product Summery</span>
+                                <span class="nav-link-text" style="margin-left: 5px;">Productivity Summery</span>
                             </a><!--//nav-link-->
                         </li><!--//nav-item-->
 
